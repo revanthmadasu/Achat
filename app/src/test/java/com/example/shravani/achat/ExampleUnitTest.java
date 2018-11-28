@@ -1,4 +1,4 @@
-package com.revanth.apps.achat;
+package com.example.shravani.achat;
 
 import org.junit.Test;
 

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "791925211473",
+    "firebase_url": "https://achat-4df50.firebaseio.com",
+    "project_id": "achat-4df50",
+    "storage_bucket": "achat-4df50.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791925211473:android:02776a53fefb8edc",
+        "android_client_info": {
+          "package_name": "com.revanth.apps.achat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "791925211473-s0q4lvrtl7km2bc29mgg47ke0f4gg1fd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.revanth.apps.achat",
+            "certificate_hash": "aafb11f9eace6cb25f5d3643b3c35b98d2fcf99d"
+          }
+        },
+        {
+          "client_id": "791925211473-g75onkdmbpkhercuaevvr2tohevkdmpl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcruQGBtJvr2q1pdn7J9WS0ZodWTchYjk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "791925211473-g75onkdmbpkhercuaevvr2tohevkdmpl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
