@@ -27,9 +27,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        nDisplayName= (TextInputLayout) findViewById(R.id.reg_display_name);
-        nEmail= (TextInputLayout) findViewById(R.id.reg_email);
-        nPassword= (TextInputLayout) findViewById(R.id.reg_password);
+        nDisplayName= (TextInputLayout) findViewById(R.id.textInputLayout4);
+        nEmail= (TextInputLayout) findViewById(R.id.textInputLayout6);
+        nPassword= (TextInputLayout) findViewById(R.id.textInputLayout7);
         nCreateBtn= (Button) findViewById(R.id.reg_create_btn);
 
         nCreateBtn.setOnClickListener(new View.OnClickListener() {
