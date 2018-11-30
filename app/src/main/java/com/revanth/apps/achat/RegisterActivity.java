@@ -26,7 +26,8 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
-
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Create an Account");
         nDisplayName= (TextInputLayout) findViewById(R.id.textInputLayout4);
         nEmail= (TextInputLayout) findViewById(R.id.textInputLayout6);
         nPassword= (TextInputLayout) findViewById(R.id.textInputLayout7);

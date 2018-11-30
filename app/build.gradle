@@ -29,7 +29,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     //implementation 'com.google.firebase:firebase-auth:16.0.1:15.0.0'
     implementation 'com.google.firebase:firebase-auth:16.0.3'
+    //implementation 'com.google.firebase:firebase-core:16.0.3'
+    //implementation 'com.google.firebase:firebase-messaging:16.0.3'
+    //implementation 'com.google.firebase:firebase-database:16.0.3'
+    // implementation 'com.google.firebase:firebase-auth:16.0.1:15.0.0'
     implementation 'com.google.firebase:firebase-core:16.0.3'
-
-   // implementation 'com.google.firebase:firebase-auth:16.0.1:15.0.0'
+    implementation 'com.google.firebase:firebase-database:16.0.2'
 }
