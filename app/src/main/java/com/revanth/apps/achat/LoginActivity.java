@@ -21,49 +21,32 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends AppCompatActivity {
-
-    //private Toolbar mToolbar;
-
+    // private Toolbar mToolbar;
     private TextInputLayout mLoginEmail;
     private TextInputLayout mLoginPassword;
-
     private Button mLogin_btn;
-
     private ProgressDialog mLoginProgress;
-
     private FirebaseAuth mAuth;
-
-    private DatabaseReference mUserDatabase;
-
+     private DatabaseReference mUserDatabase;
+    public static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         mAuth = FirebaseAuth.getInstance();
-
-      //  mToolbar = (Toolbar) findViewById(R.id.login_toolbar);
-        //setSupportActionBar(mToolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Login");
-
-
         mLoginProgress = new ProgressDialog(this);
-
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-
-
         mLoginEmail = (TextInputLayout) findViewById(R.id.login_email);
         mLoginPassword = (TextInputLayout) findViewById(R.id.login_password);
         mLogin_btn = (Button) findViewById(R.id.login_btn);
-
         mLogin_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String email = mLoginEmail.getEditText().getText().toString();
-                String password = mLoginPassword.getEditText().getText().toString();
+              final  String email = mLoginEmail.getEditText().getText().toString();
+                final String password = mLoginPassword.getEditText().getText().toString();
 
                 if(!TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)){
 
@@ -81,9 +64,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-
-
-
     private void loginUser(String email, String password) {
 
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -125,8 +105,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-
-
 
     }
 }
