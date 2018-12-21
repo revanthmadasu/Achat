@@ -38,15 +38,16 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String display_name= nDisplayName.getEditText().getText().toString();
-                String Email= nEmail.getEditText().getText().toString();
-                String Password= nPassword.getEditText().toString();
-                register_user(display_name,Email,Password);
+                String email= nEmail.getEditText().getText().toString().trim();
+                String password= nPassword.getEditText().getText().toString().trim();
+                register_user(display_name,email,password);
 
             }
         });
     }
 
     private void register_user(String display_name, String email, String password) {
+        Toast.makeText(RegisterActivity.this,"email is "+email+" password is "+password,Toast.LENGTH_LONG).show();
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -61,7 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
                             //  Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(RegisterActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(RegisterActivity.this,task.getException().toString(),Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterActivity.this,nEmail.getEditText().getText().toString(),Toast.LENGTH_LONG).show();
                         }
 
                         // ...
