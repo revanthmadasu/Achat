@@ -38,7 +38,6 @@ import java.util.Random;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingsActivity extends AppCompatActivity {
-
     private DatabaseReference mUserDatabase;
     private FirebaseUser mCurrentUser;
 
@@ -74,15 +73,15 @@ public class SettingsActivity extends AppCompatActivity {
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         String current_uid = mCurrentUser.getUid();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
-        mUserDatabase.keepSynced(true);
+      //  mUserDatabase.keepSynced(true);
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
-                String name = dataSnapshot.child("name").getValue().toString();
-                String image = dataSnapshot.child("image").getValue().toString();
-                String status = dataSnapshot.child("status").getValue().toString();
+                Toast.makeText(SettingsActivity.this, "Toast2", Toast.LENGTH_SHORT).show();
+                String name = dataSnapshot.child("name").getValue().toString().trim() ;
+                String image = dataSnapshot.child("image").getValue().toString().trim();
+                String status = dataSnapshot.child("status").getValue().toString().trim();
                 String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
 
                 mName.setText(name);
@@ -101,7 +100,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String status_value = mStatus.getText().toString().trim();
+                String status_value = mStatus.getText().toString();
 
                 Intent status_intent = new Intent(SettingsActivity.this, StatusActivity.class);
                 status_intent.putExtra("status_value", status_value);
@@ -145,7 +144,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             CropImage.activity(imageUri)
                     .setAspectRatio(1, 1)
-                    .setMinCropWindowSize(500, 500)
+                   // .setMinCropWindowSize(500, 500)
                     .start(this);
 
             //Toast.makeText(SettingsActivity.this, imageUri, Toast.LENGTH_LONG).show();
@@ -182,7 +181,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                         if(task.isSuccessful()){
 
-                            final String download_url = task.getResult().getStorage().getDownloadUrl().toString();
+                             String download_url = task.getResult().getStorage().getDownloadUrl().toString().trim();
 
                                         mUserDatabase.child("image").setValue(download_url).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -223,3 +222,10 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 }
+
+
+
+
+
+
+
