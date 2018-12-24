@@ -78,7 +78,7 @@ public class SettingsActivity extends AppCompatActivity {
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(SettingsActivity.this, "Toast2", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SettingsActivity.this, "Toast2", Toast.LENGTH_SHORT).show();
                 String name = dataSnapshot.child("name").getValue().toString().trim() ;
                 String image = dataSnapshot.child("image").getValue().toString().trim();
                 String status = dataSnapshot.child("status").getValue().toString().trim();
