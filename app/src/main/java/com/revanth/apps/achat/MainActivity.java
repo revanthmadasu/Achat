@@ -2,6 +2,8 @@ package com.revanth.apps.achat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,7 +14,10 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-   //private Toolbar nToolbar;
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
+    private SectionPagerAdapter  mSectionPagerAdapter;
+    //private Toolbar mToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -20,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-
+        mViewPager=(ViewPager)findViewById(R.id.main_tabPager);
 
        //nToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
        //setSupportActionBar(nToolbar);
