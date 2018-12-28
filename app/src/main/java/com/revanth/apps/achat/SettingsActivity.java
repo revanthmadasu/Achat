@@ -7,12 +7,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -86,6 +89,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                 mName.setText(name);
                 mStatus.setText(status);
+                Picasso.with(SettingsActivity.this).load(image).into(mDisplayImage);
 
             }
 
@@ -168,32 +172,71 @@ public class SettingsActivity extends AppCompatActivity {
 
                 Uri resultUri = result.getUri();
 
+
+
               //  File thumb_filePath = new File(resultUri.getPath());
 
                 String current_user_id = mCurrentUser.getUid();
 
-              StorageReference filepath = mImageStorage.child("profile_images").child(current_user_id + ".jpg");
+              final StorageReference filepath = mImageStorage.child("profile_images").child(current_user_id + ".jpg");
 
+                //my code
+                UploadTask revTask;
+                revTask=filepath.putFile(resultUri);
 
-                filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                Task<Uri> urlTask=revTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if(!task.isSuccessful()){
+                            throw task.getException();
+                        }
+                        return filepath.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if(task.isSuccessful())
+                        {
+                            Uri downloadUri=task.getResult();
+                            String downloadUrl=downloadUri.toString();
+                            mUserDatabase.child("image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        mProgressDialog.dismiss();
+                                        Toast.makeText(SettingsActivity.this,"Success Uploading.",Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                            Log.d("Url4",downloadUrl);
+                        }
+                    }
+                });
+                /*Task<Uri> urlTask=revTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+                        return filepath.getDownloadUrl();
+                })*/
+                /*filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
                         if(task.isSuccessful()){
 
                              String download_url = task.getResult().getStorage().getDownloadUrl().toString().trim();
+                             String downloadUrl1=task.getResult().getMetadata().getReference().getDownloadUrl().toString();
+                             Log.d("Disply URL1: ",downloadUrl1);
 
                                         mUserDatabase.child("image").setValue(download_url).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
 
                                                 if(task.isSuccessful()){
-
                                                     mProgressDialog.dismiss();
                                                     Toast.makeText(SettingsActivity.this, "Success Uploading.", Toast.LENGTH_LONG).show();
-
                                                 }
-
                                             }
                                         });
                             Toast.makeText(SettingsActivity.this, "Success Uploading.", Toast.LENGTH_LONG).show();
@@ -207,7 +250,7 @@ public class SettingsActivity extends AppCompatActivity {
                         }
 
                     }
-                });
+                });*/
 
 
 
