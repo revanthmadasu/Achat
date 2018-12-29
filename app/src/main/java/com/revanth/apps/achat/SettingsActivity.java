@@ -13,7 +13,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -79,25 +81,16 @@ public class SettingsActivity extends AppCompatActivity {
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Toast.makeText(SettingsActivity.this, "Toast2", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(SettingsActivity.this, "Toast2", Toast.LENGTH_SHORT).show();
                 String name = dataSnapshot.child("name").getValue().toString().trim() ;
                 String image = dataSnapshot.child("image").getValue().toString().trim();
                 String status = dataSnapshot.child("status").getValue().toString().trim();
                 String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
 
-                Toast.makeText(SettingsActivity.this,"Toast3",Toast.LENGTH_LONG);
                 mName.setText(name);
                 mStatus.setText(status);
-                Toast.makeText(SettingsActivity.this,"Toast3",Toast.LENGTH_LONG);
-                Toast.makeText(SettingsActivity.this,image,Toast.LENGTH_LONG);
-                try {
-                    Toast.makeText(SettingsActivity.this,image,Toast.LENGTH_LONG).show();
-                    Picasso.with(SettingsActivity.this).load(image).into(mDisplayImage);
-                }catch(Exception e)
-                {
-                    Toast.makeText(SettingsActivity.this,e.getMessage(),Toast.LENGTH_LONG);
-                    Log.d("ErrorShowingPicture:",e.getMessage());
-                }
+                Picasso.with(SettingsActivity.this).load(image).into(mDisplayImage);
+
             }
 
             @Override
@@ -179,46 +172,71 @@ public class SettingsActivity extends AppCompatActivity {
 
                 Uri resultUri = result.getUri();
 
+
+
               //  File thumb_filePath = new File(resultUri.getPath());
 
                 String current_user_id = mCurrentUser.getUid();
 
-              StorageReference filepath = mImageStorage.child("profile_images").child(current_user_id + ".jpg");
+              final StorageReference filepath = mImageStorage.child("profile_images").child(current_user_id + ".jpg");
 
-               /* filepath.putFile(resultUri);
-                Task<Uri> urlTask=*/
-                filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                //my code
+                UploadTask revTask;
+                revTask=filepath.putFile(resultUri);
+
+                Task<Uri> urlTask=revTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    @Override
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if(!task.isSuccessful()){
+                            throw task.getException();
+                        }
+                        return filepath.getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if(task.isSuccessful())
+                        {
+                            Uri downloadUri=task.getResult();
+                            String downloadUrl=downloadUri.toString();
+                            mUserDatabase.child("image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful()){
+                                        mProgressDialog.dismiss();
+                                        Toast.makeText(SettingsActivity.this,"Success Uploading.",Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                            Log.d("Url4",downloadUrl);
+                        }
+                    }
+                });
+                /*Task<Uri> urlTask=revTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+                        return filepath.getDownloadUrl();
+                })*/
+                /*filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
                         if(task.isSuccessful()){
 
-                             String download_url = task.getResult().getStorage().getDownloadUrl().toString();
-                            //String download_url = task.getResult().getDownloadUrl().toString();
-                            String downloadUrl=task.getResult().getStorage().getDownloadUrl().toString();
-                            String downloadUrl1=task.getResult().toString();
-                            String downloadUrl2=task.getResult().getStorage().toString();
-                            String downloadUrl3=task.toString();
-                            String downloadUrl4=task.getResult().getMetadata().getReference().getDownloadUrl().toString();
-                            //String downloadUrl5=
-                            Log.d("Display error1",downloadUrl);
-                            Log.d("Display error2",downloadUrl1);
-                            Log.d("Display error3",downloadUrl2);
-                            Log.d("Display error4",downloadUrl3);
-                            Log.d("Display error5",downloadUrl4);
-                            //Log.d("Display error5",downloadUrl5);
-                            Toast.makeText(SettingsActivity.this,downloadUrl, Toast.LENGTH_LONG).show();
-                                        mUserDatabase.child("image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                             String download_url = task.getResult().getStorage().getDownloadUrl().toString().trim();
+                             String downloadUrl1=task.getResult().getMetadata().getReference().getDownloadUrl().toString();
+                             Log.d("Disply URL1: ",downloadUrl1);
+
+                                        mUserDatabase.child("image").setValue(download_url).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
 
                                                 if(task.isSuccessful()){
-
                                                     mProgressDialog.dismiss();
                                                     Toast.makeText(SettingsActivity.this, "Success Uploading.", Toast.LENGTH_LONG).show();
-
                                                 }
-
                                             }
                                         });
                             Toast.makeText(SettingsActivity.this, "Success Uploading.", Toast.LENGTH_LONG).show();
@@ -232,7 +250,7 @@ public class SettingsActivity extends AppCompatActivity {
                         }
 
                     }
-                });
+                });*/
 
 
 
