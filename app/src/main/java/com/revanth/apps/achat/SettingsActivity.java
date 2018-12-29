@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -78,15 +79,25 @@ public class SettingsActivity extends AppCompatActivity {
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                Toast.makeText(SettingsActivity.this, "Toast2", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingsActivity.this, "Toast2", Toast.LENGTH_SHORT).show();
                 String name = dataSnapshot.child("name").getValue().toString().trim() ;
                 String image = dataSnapshot.child("image").getValue().toString().trim();
                 String status = dataSnapshot.child("status").getValue().toString().trim();
                 String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
 
+                Toast.makeText(SettingsActivity.this,"Toast3",Toast.LENGTH_LONG);
                 mName.setText(name);
                 mStatus.setText(status);
-
+                Toast.makeText(SettingsActivity.this,"Toast3",Toast.LENGTH_LONG);
+                Toast.makeText(SettingsActivity.this,image,Toast.LENGTH_LONG);
+                try {
+                    Toast.makeText(SettingsActivity.this,image,Toast.LENGTH_LONG).show();
+                    Picasso.with(SettingsActivity.this).load(image).into(mDisplayImage);
+                }catch(Exception e)
+                {
+                    Toast.makeText(SettingsActivity.this,e.getMessage(),Toast.LENGTH_LONG);
+                    Log.d("ErrorShowingPicture:",e.getMessage());
+                }
             }
 
             @Override
@@ -174,16 +185,30 @@ public class SettingsActivity extends AppCompatActivity {
 
               StorageReference filepath = mImageStorage.child("profile_images").child(current_user_id + ".jpg");
 
-
+               /* filepath.putFile(resultUri);
+                Task<Uri> urlTask=*/
                 filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
                         if(task.isSuccessful()){
 
-                             String download_url = task.getResult().getStorage().getDownloadUrl().toString().trim();
-
-                                        mUserDatabase.child("image").setValue(download_url).addOnCompleteListener(new OnCompleteListener<Void>() {
+                             String download_url = task.getResult().getStorage().getDownloadUrl().toString();
+                            //String download_url = task.getResult().getDownloadUrl().toString();
+                            String downloadUrl=task.getResult().getStorage().getDownloadUrl().toString();
+                            String downloadUrl1=task.getResult().toString();
+                            String downloadUrl2=task.getResult().getStorage().toString();
+                            String downloadUrl3=task.toString();
+                            String downloadUrl4=task.getResult().getMetadata().getReference().getDownloadUrl().toString();
+                            //String downloadUrl5=
+                            Log.d("Display error1",downloadUrl);
+                            Log.d("Display error2",downloadUrl1);
+                            Log.d("Display error3",downloadUrl2);
+                            Log.d("Display error4",downloadUrl3);
+                            Log.d("Display error5",downloadUrl4);
+                            //Log.d("Display error5",downloadUrl5);
+                            Toast.makeText(SettingsActivity.this,downloadUrl, Toast.LENGTH_LONG).show();
+                                        mUserDatabase.child("image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
 
