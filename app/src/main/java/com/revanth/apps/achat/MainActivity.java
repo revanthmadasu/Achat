@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -14,10 +15,11 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private TabLayout mTabLayout;
     private ViewPager mViewPager;
-    private SectionPagerAdapter  mSectionPagerAdapter;
-    //private Toolbar mToolbar;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private TabLayout mTabLayout;
+
+    //private Toolbar nToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -25,9 +27,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        mViewPager=(ViewPager)findViewById(R.id.main_tabPager);
+        mViewPager = (ViewPager) findViewById(R.id.main_tabPager);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-       //nToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+       mTabLayout = (TabLayout) findViewById(R.id.main_tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
+
+
+        //nToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
        //setSupportActionBar(nToolbar);
       // getSupportActionBar().setTitle("AChat");
     }
@@ -52,8 +61,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main_menu,menu);
-
-
         return true;
     }
 
@@ -64,9 +71,14 @@ public class MainActivity extends AppCompatActivity {
         {
             FirebaseAuth.getInstance().signOut();
             sendToStart();
-            //useless statement
-            int i=0;
-            ++i;
+
+        }
+        if(item.getItemId() == R.id.main_settings_btn){
+
+
+            Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(settingsIntent);
+
         }
         return true;
     }

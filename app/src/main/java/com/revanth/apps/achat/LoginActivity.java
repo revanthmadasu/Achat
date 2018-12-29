@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-      //  mToolbar = (Toolbar) findViewById(R.id.login_toolbar);
+        //  mToolbar = (Toolbar) findViewById(R.id.login_toolbar);
         //setSupportActionBar(mToolbar);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Login");
@@ -115,15 +114,9 @@ public class LoginActivity extends AppCompatActivity {
                     mUserDatabase.child(current_user_id).child("device_token").setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-
                             Toast.makeText(LoginActivity.this,"Successful",Toast.LENGTH_LONG).show();
-
-
-
                             startActivity(mainIntent);
                             finish();
-
-
                         }
                     });
                      */
@@ -144,19 +137,18 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
-     private void updateUI(FirebaseUser user)
-     {
-         if(user!=null)
-         {
-                            Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(mainIntent);
-                            finish();
-         }
-         else
-         {
-             Toast.makeText(LoginActivity.this, "Error : User cannot be null" , Toast.LENGTH_LONG).show();
-         }
-     }
+    private void updateUI(FirebaseUser user)
+    {
+        if(user!=null)
+        {
+            Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(mainIntent);
+            finish();
+        }
+        else
+        {
+            Toast.makeText(LoginActivity.this, "Error : User cannot be null" , Toast.LENGTH_LONG).show();
+        }
+    }
 }
-
