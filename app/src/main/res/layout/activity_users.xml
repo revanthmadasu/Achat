@@ -5,12 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".UsersActivity">
+
+    <include layout="@layout/app_bar_layout" android:id="@+id/users_appBar"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/users_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/users_appBar"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/users_appBar"></android.support.v7.widget.RecyclerView>
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp">
 
-
+    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>
