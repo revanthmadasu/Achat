@@ -213,6 +213,28 @@ public class SettingsActivity extends AppCompatActivity {
                             Uri downloadUri=task.getResult();
                             String downloadUrl=downloadUri.toString();
                             UploadTask uploadTask=thumb_filepath.putBytes(thumb_byte);
+                            Task<Uri> thumb_task=uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                @Override
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if(!task.isSuccessful())
+                                        throw task.getException();
+                                    return thumb_filepath.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    if(task.isSuccessful()) {
+                                        Uri thumb_downloadUri = task.getResult();
+                                        String thumb_downloadUrl = thumb_downloadUri.toString();
+                                        mUserDatabase.child("thumb_image").setValue(thumb_downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Toast.makeText(SettingsActivity.this,"Thumb uploaded",Toast.LENGTH_SHORT);
+                                            }
+                                        });
+                                    }
+                                }
+                            });
                             //uploadTask.add
                             mUserDatabase.child("image").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
