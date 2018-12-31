@@ -56,7 +56,7 @@ public class UsersActivity extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull Users model) {
                 holder.setDisplayName(model.getName());
                 holder.setUserStatus(model.getStatus());
-                holder.setUserImage(model.getImage(),getApplicationContext());
+                holder.setUserImage(model.getThumb_image(),getApplicationContext());
                 Log.d("rockstar","Binding is done");
             }
 
