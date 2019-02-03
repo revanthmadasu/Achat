@@ -47,7 +47,7 @@ dependencies {
     implementation 'com.google.gms:google-services:3.2.1'
 
     //implementation 'com.google.firebase:firebase-database:16.0.1:15.0.0'
-    implementation'com.firebaseui:firebase-ui-database:4.2.0'
+    implementation 'com.firebaseui:firebase-ui-database:4.2.0'
     implementation 'id.zelory:compressor:2.0.0'
 }
 
