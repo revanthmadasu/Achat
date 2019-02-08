@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -92,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loginUser(String email, final String password) {
 
-        Toast.makeText(LoginActivity.this,"inside loginUser",Toast.LENGTH_LONG).show();
+        //Toast.makeText(LoginActivity.this,"inside loginUser",Toast.LENGTH_LONG).show();
 
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -103,23 +104,23 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this,"Task is successful",Toast.LENGTH_LONG).show();
                     mLoginProgress.dismiss();
 
-                    String TAG="LoginActivity";
-                    Log.d(TAG, "signInWithEmail:success");
                     FirebaseUser user = mAuth.getCurrentUser();
                     updateUI(user);
 
                     String current_user_id = mAuth.getCurrentUser().getUid();
-                    String deviceToken = FirebaseInstanceId.getInstance().getToken();
-                    /*Toast.makeText(LoginActivity.this,"User = "+current_user_id+" device token = "+deviceToken,Toast.LENGTH_LONG).show();
+                    String deviceToken = FirebaseInstanceId.getInstance().getToken();//getToken() is depreciated method. have to work on it
+
                     mUserDatabase.child(current_user_id).child("device_token").setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(LoginActivity.this,"Successful",Toast.LENGTH_LONG).show();
+                            Intent mainIntent=new Intent(LoginActivity.this,MainActivity.class);
+                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            Toast.makeText(LoginActivity.this,"Successfully added token",Toast.LENGTH_LONG).show();
                             startActivity(mainIntent);
                             finish();
                         }
                     });
-                     */
+
 
 
 
