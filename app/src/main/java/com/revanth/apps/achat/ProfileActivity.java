@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -43,9 +44,14 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        Log.d("notification intent"," starting ");
+
         final String user_id=getIntent().getStringExtra("user_id");
 
+        Log.d("notification intent","user id = "+user_id);
+
         mUsersDatabase=FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+
         mFriendReqDatabase=FirebaseDatabase.getInstance().getReference().child("Friend_req");
         mFriendDatabase=FirebaseDatabase.getInstance().getReference().child("Friends");
         mNotificationDatabase=FirebaseDatabase.getInstance().getReference().child("Notifications");
@@ -248,7 +254,30 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     });
                 }
+                //Unfriending a friend
+                if(mCurrent_state.equals("friends"))
+                {
+                    mFriendDatabase.child(mCurrentUser.getUid()).child(user_id).removeValue()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    mFriendDatabase.child(user_id).child(mCurrentUser.getUid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+
+                                            mProfileSendReqBtn.setEnabled(true);
+                                            mCurrent_state="not_friends";
+                                            mProfileSendReqBtn.setText("Add Friend");
+
+                                            mDeclineButton.setVisibility(View.INVISIBLE);
+                                            mDeclineButton.setEnabled(false);
+                                        }
+                                    });
+                                }
+                            });
+                }
             }
         });
+
     }
 }
