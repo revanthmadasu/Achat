@@ -66,12 +66,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         mCurrent_state="not_friends";
 
-        mProgressDialog=new ProgressDialog(this);
+        /*mProgressDialog=new ProgressDialog(this);
         mProgressDialog.setTitle("Loading User Data");
         mProgressDialog.setMessage("Please wait while we load the user data");
         mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.show();
-
+        */
 
         mUsersDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -111,7 +111,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 mDeclineButton.setVisibility(View.INVISIBLE);
                                 mDeclineButton.setEnabled(false);
                             }
-                            mProgressDialog.dismiss();
+                            //mProgressDialog.dismiss();
                         }
                         else
                         {
@@ -125,12 +125,12 @@ public class ProfileActivity extends AppCompatActivity {
                                         mDeclineButton.setVisibility(View.INVISIBLE);
                                         mDeclineButton.setEnabled(false);
                                     }
-                                    mProgressDialog.dismiss();
+                                    //mProgressDialog.dismiss();
                                 }
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                                    mProgressDialog.dismiss();
+                                    //mProgressDialog.dismiss();
                                 }
                             });
                         }
@@ -275,6 +275,32 @@ public class ProfileActivity extends AppCompatActivity {
                                     });
                                 }
                             });
+                }
+            }
+        });
+        mDeclineButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCurrent_state.equals("req_received"))
+                {
+                    mFriendReqDatabase.child(user_id).child(mCurrentUser.getUid()).removeValue().addOnSuccessListener(
+                            new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    mFriendDatabase.child(mCurrentUser.getUid()).child(user_id).removeValue()
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            mProfileSendReqBtn.setText("Add Friend");
+                                            mProfileSendReqBtn.setEnabled(true);
+
+                                            mDeclineButton.setEnabled(false);
+                                            mDeclineButton.setVisibility(View.INVISIBLE);
+                                        }
+                                    });
+                                }
+                            }
+                    );
                 }
             }
         });
