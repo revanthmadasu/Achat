@@ -2,6 +2,7 @@ package com.revanth.apps.achat;
 
 import android.app.ProgressDialog;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.squareup.picasso.Picasso;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -159,41 +161,14 @@ public class ProfileActivity extends AppCompatActivity {
                 // -------------Not FRIENDS STATE------------------
                 if(mCurrent_state.equals("not_friends"))
                 {
-                    mFriendReqDatabase.child(mCurrentUser.getUid()).child(user_id).child("request_type")
-                            .setValue("sent").addOnCompleteListener(new OnCompleteListener<Void>() {
+                   Map requestMap=new HashMap();
+                   requestMap.put(mCurrentUser.getUid()+"/"+user_id+"request_type","sent");
+                    requestMap.put(user_id+"/"+mCurrentUser.getUid()+"request_type","received");
+
+                    mFriendReqDatabase.updateChildren(requestMap, new DatabaseReference.CompletionListener() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful())
-                            {
-                                mFriendReqDatabase.child(user_id).child(mCurrentUser.getUid()).child("request_type")
-                                        .setValue("received").addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
+                        public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
 
-                                        HashMap<String, String> notificationData=new HashMap();
-                                        notificationData.put("from",mCurrentUser.getUid());
-                                        notificationData.put("type","request");
-
-                                        mNotificationDatabase.child(user_id).push().setValue(notificationData)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                mCurrent_state="req_sent";
-                                                mProfileSendReqBtn.setText("Cancel Friend Request");
-
-                                                mDeclineButton.setVisibility(View.INVISIBLE);
-                                                mDeclineButton.setEnabled(false);
-                                            }
-                                        });
-
-                                        Toast.makeText(ProfileActivity.this,"Request Sent Successfully",Toast.LENGTH_SHORT);
-                                    }
-                                });
-                            }
-                            else{
-                                Toast.makeText(ProfileActivity.this,"Request Failed",Toast.LENGTH_SHORT);
-                            }
-                            mProfileSendReqBtn.setEnabled(true);
                         }
                     });
                 }
