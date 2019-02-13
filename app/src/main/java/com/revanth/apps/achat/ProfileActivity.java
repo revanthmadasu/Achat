@@ -99,7 +99,13 @@ public class ProfileActivity extends AppCompatActivity {
 
                         if(dataSnapshot.hasChild(user_id))
                         {
-                            String req_type=dataSnapshot.child(user_id).child("request_type").getValue().toString();
+                            //Log.d("Rocky",dataSnapshot.child(user_id).child("request_type").toString());
+                            //Log.d("Rocky",dataSnapshot.toString());
+                            //Log.d("Rocky",dataSnapshot.child(user_id).getValue().toString());
+                            String req_type=dataSnapshot.child(user_id).getValue().toString().substring(15);
+                            req_type=req_type.substring(0,req_type.length()-1);
+                            //Log.d("Rocky",req_type2);
+                            //String req_type=dataSnapshot.child(user_id).child("request_type").getValue().toString();
                             if(req_type.equals("received"))
                             {
                                 mProfileSendReqBtn.setEnabled(true);
@@ -118,6 +124,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 mDeclineButton.setVisibility(View.INVISIBLE);
                                 mDeclineButton.setEnabled(false);
                             }
+                            Log.d("Rocky","In Profile");
                             //mProgressDialog.dismiss();
                         }
                         else
@@ -224,11 +231,11 @@ public class ProfileActivity extends AppCompatActivity {
                 if(mCurrent_state.equals("req_received"))
                 {
                     final String currentDate= DateFormat.getDateTimeInstance().format(new Date());
-                    mFriendDatabase.child(mCurrentUser.getUid()).child(user_id).setValue(currentDate)
+                    mFriendDatabase.child(mCurrentUser.getUid()).child(user_id).child("date").setValue(currentDate)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            mFriendDatabase.child(user_id).child(mCurrentUser.getUid()).setValue(currentDate)
+                            mFriendDatabase.child(user_id).child(mCurrentUser.getUid()).child("date").setValue(currentDate)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {

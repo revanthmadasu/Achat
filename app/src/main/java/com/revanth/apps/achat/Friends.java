@@ -1,9 +1,16 @@
 package com.revanth.apps.achat;
 
+import android.util.Log;
+
 public class Friends {
     public String date;
 
+    public Friends()
+    {
+        this.date="DefaultDate";
+    }
     public Friends(String date) {
+        Log.d("Rocky","Creating Users");
         this.date = date;
     }
 
