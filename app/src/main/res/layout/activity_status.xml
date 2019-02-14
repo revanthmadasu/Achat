@@ -26,10 +26,15 @@
         android:id="@+id/status_save_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/status_input"
         android:layout_below="@+id/status_input"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="237dp"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/colorAccent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="357dp"
+        android:backgroundTint="@color/colorPrimaryDark"
         android:text="SAVE CHANGES"
         android:textColor="@android:color/white" />
 
