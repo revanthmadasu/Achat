@@ -68,17 +68,22 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
         mDisplayImage = (CircleImageView) findViewById(R.id.settings_image);
         mName = (TextView) findViewById(R.id.settings_name);
         mStatus = (TextView) findViewById(R.id.settings_status);
         mStatusBtn = (Button) findViewById(R.id.settings_status_btn);
+
         mImageBtn = (Button) findViewById(R.id.settings_image_btn);
         mImageStorage = FirebaseStorage.getInstance().getReference();
+
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         String current_uid = mCurrentUser.getUid();
+
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+
         mUserDatabase.keepSynced(true);
-      //  mUserDatabase.keepSynced(true);
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
