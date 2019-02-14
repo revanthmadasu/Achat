@@ -6,26 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".ProfileActivity">
 
-    <TextView
-        android:id="@+id/profile_displayName"
-        android:layout_width="171dp"
-        android:layout_height="45dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="391dp"
-        android:layout_marginBottom="258dp"
-        android:text="Display Name"
-        android:textSize="24sp" />
-
     <ImageView
         android:id="@+id/profile_image"
         android:layout_width="306dp"
-        android:layout_height="271dp"
+        android:layout_height="257dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="33dp"
-        android:layout_marginTop="7dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="39dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="39dp"
         tools:srcCompat="@tools:sample/avatars" />
 
 
@@ -34,13 +24,17 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
+        android:layout_marginTop="344dp"
         android:layout_marginEnd="0dp"
-        android:layout_marginBottom="219dp"
+        android:layout_marginBottom="137dp"
         android:text="Total Friends"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textColor="@android:color/background_dark"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/profile_send_req_btn"
@@ -49,9 +43,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="46dp"
-        android:layout_marginEnd="46dp"
-        android:layout_marginBottom="115dp"
+        android:layout_marginStart="47dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginBottom="79dp"
         android:backgroundTint="@color/colorPrimaryDark"
         android:text="Send Friend Request"
         android:textColor="@color/common_google_signin_btn_text_dark_default" />
@@ -61,16 +55,19 @@
         android:layout_width="match_parent"
         android:layout_height="31dp"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
+        android:layout_marginTop="304dp"
         android:layout_marginEnd="0dp"
-        android:layout_marginBottom="271dp"
+        android:layout_marginBottom="176dp"
         android:fontFamily="sans-serif"
         android:text="User Status"
         android:textAlignment="center"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        android:textStyle="bold|italic" />
 
     <Button
         android:id="@+id/profile_decline_btn"
@@ -79,12 +76,31 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="46dp"
-        android:layout_marginEnd="46dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginBottom="27dp"
         android:backgroundTint="@color/colorAccent"
         android:text="Decline Friend Request"
         android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+    <TextView
+        android:id="@+id/profile_displayName"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="259dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="214dp"
+        android:text="Display Name"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@android:color/background_dark"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
 
 </RelativeLayout>
