@@ -44,7 +44,7 @@ public class AChat extends Application {
                 if (dataSnapshot != null) {
                     Log.d("Rocky","achat online msg3");
                     mUserDatabase.child("online").onDisconnect().setValue(false);
-                    mUserDatabase.child("online").setValue(true);
+
                 }
             }
 

@@ -89,14 +89,14 @@ public class FriendsFragment extends Fragment {
                     }
                 });
 
-               /*holder.mView.setOnClickListener(new View.OnClickListener() {
+               holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent profileIntent= new Intent(FriendsFragment.this,ProfileActivity.class);
+                        Intent profileIntent= new Intent(FriendsFragment.this.getActivity(),ProfileActivity.class);
                         profileIntent.putExtra("user_id",list_user_id);
                         startActivity(profileIntent);
                     }
-                });*/
+                });
 
             }
 
