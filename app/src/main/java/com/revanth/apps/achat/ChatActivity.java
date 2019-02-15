@@ -1,5 +1,6 @@
 package com.revanth.apps.achat;
 
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -63,8 +68,31 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
         mChatToolbar=(Toolbar) findViewById(R.id.chat_app_bar);
-        setSupportActionBar(mChatToolbar);
+
+       // setSupportActionBar(mChatToolbar);
+
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        mAuth=FirebaseAuth.getInstance();
+        mRootRef=FirebaseDatabase.getInstance().getReference();
+
+        mChatUser=getIntent().getStringExtra("user_id");
+
+        mRootRef.child("Users").child(mChatUser).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String chat_user_name=dataSnapshot.child("name").getValue().toString();
+                getSupportActionBar().setTitle(chat_user_name);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+                actionBar.setTitle(mChatUser);
     }
 }

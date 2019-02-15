@@ -77,12 +77,13 @@ public class FriendsFragment extends Fragment {
 
                 final String list_user_id=getRef(position).getKey();
 
+
                 mUsersDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         //String username1=dataSnapshot.child("name").get
                         Log.d("Rocky mUsers",dataSnapshot.child(list_user_id).child("name").getValue().toString());
-                        String username=dataSnapshot.child(list_user_id).child("name").getValue().toString();
+                        final String username=dataSnapshot.child(list_user_id).child("name").getValue().toString();
                         String thumb_image=dataSnapshot.child(list_user_id).child("thumb_image").getValue().toString();
                         holder.setName(username);
                         holder.setUserImage(thumb_image,getContext());
@@ -137,7 +138,7 @@ public class FriendsFragment extends Fragment {
 
                                 Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                                  chatIntent.putExtra("user_id", list_user_id);
-                                // chatIntent.putExtra("user_name", userName);
+;
                                  startActivity(chatIntent);
 
                              }
