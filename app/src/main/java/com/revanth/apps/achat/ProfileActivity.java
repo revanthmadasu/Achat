@@ -99,13 +99,9 @@ public class ProfileActivity extends AppCompatActivity {
 
                         if(dataSnapshot.hasChild(user_id))
                         {
-                            //Log.d("Rocky",dataSnapshot.child(user_id).child("request_type").toString());
-                            //Log.d("Rocky",dataSnapshot.toString());
-                            //Log.d("Rocky",dataSnapshot.child(user_id).getValue().toString());
+
                             String req_type=dataSnapshot.child(user_id).getValue().toString().substring(15);
                             req_type=req_type.substring(0,req_type.length()-1);
-                            //Log.d("Rocky",req_type2);
-                            //String req_type=dataSnapshot.child(user_id).child("request_type").getValue().toString();
                             if(req_type.equals("received"))
                             {
                                 mProfileSendReqBtn.setEnabled(true);
