@@ -33,25 +33,27 @@ public class AChat extends Application {
         Picasso.setSingletonInstance(built);
 
         mAuth=FirebaseAuth.getInstance();
-        mUserDatabase=FirebaseDatabase.getInstance().getReference().child("Users")
-                .child(mAuth.getCurrentUser().getUid());
-        Log.d("Rocky","achat online msg1");
-        mUserDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        if(mAuth.getCurrentUser()!=null) {
+            mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users")
+                    .child(mAuth.getCurrentUser().getUid());
+            Log.d("Rocky", "achat online msg1");
+            mUserDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                Log.d("Rocky","achat online msg2");
-                if (dataSnapshot != null) {
-                    Log.d("Rocky","achat online msg3");
-                    mUserDatabase.child("online").onDisconnect().setValue(false);
+                    Log.d("Rocky", "achat online msg2");
+                    if (dataSnapshot != null) {
+                        Log.d("Rocky", "achat online msg3");
+                        mUserDatabase.child("online").onDisconnect().setValue(false);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+            });
+        }
     }
 }
