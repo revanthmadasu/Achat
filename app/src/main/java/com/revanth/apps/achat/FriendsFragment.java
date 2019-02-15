@@ -87,14 +87,9 @@ public class FriendsFragment extends Fragment {
                         String thumb_image=dataSnapshot.child(list_user_id).child("thumb_image").getValue().toString();
                         holder.setName(username);
                         holder.setUserImage(thumb_image,getContext());
-                        //String userOnline=dataSnapshot.child("online").getValue().toString();
-                        //holder.setName(username);
 
-                        Boolean userOnline=(boolean) dataSnapshot.child(list_user_id).child("online").getValue();
-                        //  String userOnline = dataSnapshot.child("online").getValue().toString();
+                        String userOnline=dataSnapshot.child(list_user_id).child("online").getValue().toString();
                         holder.setUserOnline(userOnline);
-
-
 
                     }
 
@@ -104,14 +99,7 @@ public class FriendsFragment extends Fragment {
                     }
                 });
 
-             /*  holder.mView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent profileIntent= new Intent(FriendsFragment.this.getActivity(),ProfileActivity.class);
-                        profileIntent.putExtra("user_id",list_user_id);
-                        startActivity(profileIntent);
-                    }
-                });*/
+
              holder.mView.setOnClickListener(new View.OnClickListener() {
                  @Override
                  public void onClick(View v) {
@@ -138,16 +126,12 @@ public class FriendsFragment extends Fragment {
 
                                 Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                                  chatIntent.putExtra("user_id", list_user_id);
-;
+                                 //chatIntent.putExtra("user_name", username);
                                  startActivity(chatIntent);
-
                              }
-
                          }
                      });
-
                      builder.show();
-
                  }
 
              });
@@ -172,59 +156,7 @@ public class FriendsFragment extends Fragment {
         super.onStart();
         if(mfriendsRecyclerViewAdapter!=null)
             mfriendsRecyclerViewAdapter.startListening();
-
-
-
     }
-    public static class FriendsViewHolder extends RecyclerView.ViewHolder {
 
-        View mView;
-
-        public FriendsViewHolder(View itemView) {
-            super(itemView);
-
-            mView = itemView;
-
-        }
-
-        public void setDate(String date){
-
-            TextView userStatusView = (TextView) mView.findViewById(R.id.user_single_status);
-            userStatusView.setText(date);
-
-        }
-
-        public void setName(String name){
-
-            TextView userNameView = (TextView) mView.findViewById(R.id.user_single_name);
-            userNameView.setText(name);
-
-        }
-
-        public void setUserImage(String thumb_image, Context ctx){
-
-            CircleImageView userImageView = (CircleImageView) mView.findViewById(R.id.user_single_image);
-            Picasso.with(ctx).load(thumb_image).placeholder(R.drawable.default_avatar).into(userImageView);
-
-        }
-
-        public void setUserOnline(Boolean online_status) {
-
-            ImageView userOnlineView = (ImageView) mView.findViewById(R.id.user_single_online_icon);
-
-            if(online_status==true){
-
-                userOnlineView.setVisibility(View.VISIBLE);
-
-            } else {
-
-                userOnlineView.setVisibility(View.INVISIBLE);
-
-            }
-
-        }
-
-
-    }
 
 }
