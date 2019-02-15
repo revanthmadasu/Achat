@@ -86,11 +86,9 @@ public class FriendsFragment extends Fragment {
                         String thumb_image=dataSnapshot.child(list_user_id).child("thumb_image").getValue().toString();
                         holder.setName(username);
                         holder.setUserImage(thumb_image,getContext());
-                        //String userOnline=dataSnapshot.child("online").getValue().toString();
-                        //holder.setName(username);
+
 
                         Boolean userOnline=(boolean) dataSnapshot.child(list_user_id).child("online").getValue();
-                        //  String userOnline = dataSnapshot.child("online").getValue().toString();
                         holder.setUserOnline(userOnline);
 
 
