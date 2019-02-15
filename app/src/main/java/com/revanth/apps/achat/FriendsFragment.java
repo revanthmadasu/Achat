@@ -123,6 +123,7 @@ public class FriendsFragment extends Fragment {
                      builder.setItems(options, new DialogInterface.OnClickListener() {
                          @Override
                          public void onClick(DialogInterface dialogInterface, int i) {
+                           //  String username=dataSnapshot.child(list_user_id).child("name").getValue().toString();
 
                              //Click Event for each item.
                              if(i == 0){
@@ -137,7 +138,7 @@ public class FriendsFragment extends Fragment {
 
                                 Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                                  chatIntent.putExtra("user_id", list_user_id);
-                                // chatIntent.putExtra("user_name", userName);
+                                // chatIntent.putExtra("user_name", username);
                                  startActivity(chatIntent);
 
                              }
