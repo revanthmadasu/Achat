@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
@@ -20,20 +21,20 @@ public class AChat extends Application {
     public void onCreate() {
         super.onCreate();
 
-        Log.d("Rocky","achat online msg0");
+        Log.d("Rocky", "achat online msg0");
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         //Picasso
-        Picasso.Builder builder=new Picasso.Builder(this);
-        builder.downloader(new OkHttpDownloader(this,Integer.MAX_VALUE));
-        Picasso built=builder.build();
+        Picasso.Builder builder = new Picasso.Builder(this);
+        builder.downloader(new OkHttpDownloader(this, Integer.MAX_VALUE));
+        Picasso built = builder.build();
         built.setIndicatorsEnabled(true);
         built.setLoggingEnabled(true);
         Picasso.setSingletonInstance(built);
 
-        mAuth=FirebaseAuth.getInstance();
-        if(mAuth.getCurrentUser()!=null) {
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() != null) {
             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users")
                     .child(mAuth.getCurrentUser().getUid());
             Log.d("Rocky", "achat online msg1");
@@ -44,7 +45,7 @@ public class AChat extends Application {
                     Log.d("Rocky", "achat online msg2");
                     if (dataSnapshot != null) {
                         Log.d("Rocky", "achat online msg3");
-                        mUserDatabase.child("online").onDisconnect().setValue(false);
+                        mUserDatabase.child("online").onDisconnect().setValue(ServerValue.TIMESTAMP);
 
                     }
                 }

@@ -2,10 +2,12 @@ package com.revanth.apps.achat;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -99,14 +101,54 @@ public class FriendsFragment extends Fragment {
                     }
                 });
 
-               holder.mView.setOnClickListener(new View.OnClickListener() {
+             /*  holder.mView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent profileIntent= new Intent(FriendsFragment.this.getActivity(),ProfileActivity.class);
                         profileIntent.putExtra("user_id",list_user_id);
                         startActivity(profileIntent);
                     }
-                });
+                });*/
+             holder.mView.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+
+                     CharSequence options[] = new CharSequence[]{"Open Profile", "Send message"};
+
+                     final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                     builder.setTitle("Select Options");
+                     builder.setItems(options, new DialogInterface.OnClickListener() {
+                         @Override
+                         public void onClick(DialogInterface dialogInterface, int i) {
+                           //  String username=dataSnapshot.child(list_user_id).child("name").getValue().toString();
+
+                             //Click Event for each item.
+                             if(i == 0){
+
+                                 Intent profileIntent = new Intent(getContext(), ProfileActivity.class);
+                                 profileIntent.putExtra("user_id", list_user_id);
+                                 startActivity(profileIntent);
+
+                             }
+
+                             if(i == 1){
+
+                                Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                                 chatIntent.putExtra("user_id", list_user_id);
+                                // chatIntent.putExtra("user_name", username);
+                                 startActivity(chatIntent);
+
+                             }
+
+                         }
+                     });
+
+                     builder.show();
+
+                 }
+
+             });
 
             }
 
