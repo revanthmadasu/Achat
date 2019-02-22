@@ -57,7 +57,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".ChatActivity"
-            android:parentActivityName=".MainActivity" ></activity>
+            android:parentActivityName=".MainActivity" >
+            <intent-filter>
+                <action android:name="com.revanth.apps.achat_TARGET_MESSAGE_NOTIFICATION"/>
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
