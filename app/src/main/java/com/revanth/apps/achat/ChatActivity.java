@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -47,7 +48,7 @@ public class ChatActivity extends AppCompatActivity {
     private String mChatUser;
     private Toolbar mChatToolbar;
 
-    private DatabaseReference mRootRef;
+    private DatabaseReference mRootRef,mMessageNotificationsDatabase;
 
     private TextView mTitleView;
     private TextView mLastSeenView;
@@ -96,6 +97,7 @@ public class ChatActivity extends AppCompatActivity {
         actionBar.setDisplayShowCustomEnabled(true);
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
+        mMessageNotificationsDatabase=FirebaseDatabase.getInstance().getReference().child("MessageNotifications");
         mAuth = FirebaseAuth.getInstance();
         mCurrentUserId = mAuth.getCurrentUser().getUid();
 
@@ -261,7 +263,7 @@ public class ChatActivity extends AppCompatActivity {
     private void sendMessage() {
 
 
-        String message = mChatMessageView.getText().toString();
+        final String message = mChatMessageView.getText().toString();
 
         if (!TextUtils.isEmpty(message)) {
 
@@ -300,6 +302,22 @@ public class ChatActivity extends AppCompatActivity {
 
                         Log.d("CHAT_LOG", databaseError.getMessage().toString());
 
+                    }
+                    else
+                    {
+                        Map messageNotificationMap=new HashMap();
+                        messageNotificationMap.put("from",mCurrentUserId);
+                        messageNotificationMap.put("type","message");
+                        DatabaseReference messageNotificationDatabase=mMessageNotificationsDatabase.child(mChatUser).push();
+                        messageNotificationDatabase.updateChildren(messageNotificationMap, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                if(databaseError!=null)
+                                {
+                                    Log.d("ChatNotificationError",databaseError.getMessage());
+                                }
+                            }
+                        });
                     }
 
                 }
