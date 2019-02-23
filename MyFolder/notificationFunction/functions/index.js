@@ -43,7 +43,7 @@ exports.sendNotification=functions.database.ref('/Notifications/{user_id}/{notif
         }); 
     });
 });
-
+// current_user_id refers to user_id to which message has been sent
 exports.sendmessageNotification=functions.database.ref('/MessageNotifications/{current_user_id}/{message_notification_id}').onWrite((change,context)=>{
     const current_user_id=context.params.current_user_id;
     const message_notification_id=context.params.message_notification_id;
@@ -78,7 +78,11 @@ exports.sendmessageNotification=functions.database.ref('/MessageNotifications/{c
     
             return admin.messaging().sendToDevice(token_id,payload).then(response=>
             {
-                return console.log('Message notification sent to '+userName);
+                const keys=admin.database().ref(`Users/${current_user_id}/keys`).once('value')
+                const messages=admin.database().ref(`Users/${current_user_id}/messages`).once('value')
+                const online=admin.database().ref(`Users/${current_user_id}/online`).once('value')
+                return console.log(userName+" status "+online)
+                //return console.log('Message notification sent to '+userName);
             });
         }); 
     });
