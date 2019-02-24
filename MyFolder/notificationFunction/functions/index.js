@@ -2,7 +2,10 @@
 
 const functions = require('firebase-functions');
 const admin=require('firebase-admin');
+
 admin.initializeApp(functions.config().firebase);
+
+const db=admin.database()
 
 exports.sendNotification=functions.database.ref('/Notifications/{user_id}/{notification_id}').onWrite((change,context)=>{
 
@@ -78,10 +81,38 @@ exports.sendmessageNotification=functions.database.ref('/MessageNotifications/{c
     
             return admin.messaging().sendToDevice(token_id,payload).then(response=>
             {
-                const keys=admin.database().ref(`Users/${current_user_id}/keys`).once('value')
-                const messages=admin.database().ref(`Users/${current_user_id}/messages`).once('value')
-                const online=admin.database().ref(`Users/${current_user_id}/online`).once('value')
-                return console.log(userName+" status "+online)
+                const keysQuery=admin.database().ref(`Users/${current_user_id}/keys`).once('value')
+                const messagesQuery=admin.database().ref(`Users/${current_user_id}/messages`).once('value')
+                const onlineQuery=admin.database().ref(`Users/${current_user_id}/online`).once('value')
+                return Promise.all([keysQuery,messagesQuery,onlineQuery]).then(result=>{
+                    const keys=result[0].val()
+                    const messages=result[1].val()
+                    const online=result[2].val()
+                    var messageDbRef_from=db.ref().child("messages/"+from_user_id+"/"+current_user_id)
+                    var messageDbRef_current=db.ref().child("messages/"+current_user_id+"/"+from_user_id)
+                    if(online!=="true")
+                    {
+                    messageDbRef_current.push().set(
+                        {
+                            message:"this is  automatic test message",
+                            seen:false,
+                            type:"text",
+                            time:admin.database.ServerValue.TIMESTAMP,
+                            from:current_user_id
+                        }
+                    )
+                    messageDbRef_from.push().set(
+                        {
+                            message:"this is  automatic test message",
+                            seen:false,
+                            type:"text",
+                            time:admin.database.ServerValue.TIMESTAMP,
+                            from:current_user_id
+                        }
+                    )
+                    }
+                    return console.log('Message notification sent to '+userName+' online = '+online+' keys = '+keys);
+                })
                 //return console.log('Message notification sent to '+userName);
             });
         }); 
