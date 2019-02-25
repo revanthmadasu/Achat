@@ -111,6 +111,11 @@ public class MainActivity extends AppCompatActivity {
             Intent settingsIntent=new Intent(MainActivity.this,UsersActivity.class);
             startActivity(settingsIntent);
         }
+        if(item.getItemId()==R.id.main_train_bot_btn)
+        {
+            Intent trainBotIntent=new Intent(MainActivity.this,TrainBot.class);
+            startActivity(trainBotIntent);
+        }
         return true;
     }
 }

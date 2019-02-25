@@ -11,4 +11,7 @@
     <item
         android:id="@+id/main_all_btn"
         android:title="All Users" />
+    <item
+        android:id="@+id/main_train_bot_btn"
+        android:title="Add Auto-reply Data" />
 </menu>
