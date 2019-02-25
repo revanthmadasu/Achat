@@ -1,34 +1,107 @@
 package com.revanth.apps.achat;
 
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class TrainBot extends AppCompatActivity {
-    private TextInputLayout keysInput;
-    private TextInputLayout messageInput;
+    private TextInputEditText keysInput;
+    private TextInputEditText messageInput;
     private Button addData;
-    private DatabaseReference mUserDatabase;
+    private DatabaseReference mCurrentUserDatabase;
+    private FirebaseAuth mAuth;
+    private String mCurrentUsetId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train_bot);
-        keysInput=(TextInputLayout)findViewById(R.id.bot_keys_input);
-        messageInput=(TextInputLayout)findViewById(R.id.bot_messages_input);
+        mAuth=FirebaseAuth.getInstance();
+        mCurrentUsetId=mAuth.getUid();
+        keysInput=(TextInputEditText)findViewById(R.id.bot_keys_input);
+        messageInput=(TextInputEditText)findViewById(R.id.bot_messages_input);
         addData=(Button)findViewById(R.id.bot_add_button);
 
-        mUserDatabase=FirebaseDatabase.getInstance().getReference().child("Users");
+        mCurrentUserDatabase=FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUsetId);
         addData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String keys=keysInput.getEditText().getText().toString();
-                String messages=messageInput.getEditText().getText().toString();
+                mCurrentUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        StringBuilder keysInDb=new StringBuilder(dataSnapshot.child("keys").getValue().toString());
+                        StringBuilder messagesInDb=new StringBuilder(dataSnapshot.child("responses").getValue().toString());
+                        StringBuilder associations=new StringBuilder(dataSnapshot.child("associations").getValue().toString());
+
+                        String[] keysInDbArray=keysInDb.toString().split(";;;");
+                        String[] responseMessagesInDbArray=messagesInDb.toString().split(";;;");
+
+                        String keysInputString=keysInput.getText().toString();
+                        String responseInputMessage=messageInput.getText().toString();
+
+                        Log.d("revaa keys",keysInDbArray.toString());
+                        Log.d("revaa responses",messagesInDb.toString());
+                        Log.d("revaa associations",associations.toString());
+
+                        int messageMatchedIndex=-1;
+                        String[] keysInputArray=keysInputString.split(",");
+                        for(int i=0;i<responseMessagesInDbArray.length;++i)
+                        {
+                            if(responseInputMessage.equalsIgnoreCase(responseMessagesInDbArray[i]))
+                            {
+                                messageMatchedIndex=i;
+                                break;
+                            }
+                        }
+                        if(messageMatchedIndex==-1)
+                        {
+                            messagesInDb.append(";;;");
+                            messagesInDb.append(responseInputMessage);
+                        }
+                        messageMatchedIndex=responseMessagesInDbArray.length;
+                        int newKeyIndex=keysInDbArray.length;
+                        for(int i=0;i<keysInputArray.length;i++)
+                        {
+                            int matchedKeyIndex=-1;
+                            for(int j=0;j<keysInDbArray.length;++j)
+                            {
+                                if(keysInputArray[i].equals(keysInDbArray[j]))
+                                {
+                                    matchedKeyIndex=i;
+                                    associations.append(";"+messageMatchedIndex+":"+matchedKeyIndex);
+                                }
+                            }
+                            if(matchedKeyIndex==-1)
+                            {
+                                keysInDb.append(","+keysInputArray[i]);
+                                associations.append(";"+messageMatchedIndex+":"+newKeyIndex);
+                                ++newKeyIndex;
+                            }
+                        }
+                        mCurrentUserDatabase.child("keys").setValue(keysInDb.toString());
+                        mCurrentUserDatabase.child("responses").setValue(messagesInDb.toString());
+                        mCurrentUserDatabase.child("associations").setValue(associations.toString());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
 
             }
         });
