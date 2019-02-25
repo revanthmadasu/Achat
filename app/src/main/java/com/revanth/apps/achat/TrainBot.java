@@ -45,7 +45,7 @@ public class TrainBot extends AppCompatActivity {
                         StringBuilder messagesInDb=new StringBuilder(dataSnapshot.child("responses").getValue().toString());
                         StringBuilder associations=new StringBuilder(dataSnapshot.child("associations").getValue().toString());
 
-                        String[] keysInDbArray=keysInDb.toString().split(";;;");
+                        String[] keysInDbArray=keysInDb.toString().split(",");
                         String[] responseMessagesInDbArray=messagesInDb.toString().split(";;;");
 
                         String keysInputString=keysInput.getText().toString();
@@ -72,21 +72,24 @@ public class TrainBot extends AppCompatActivity {
                         }
                         messageMatchedIndex=responseMessagesInDbArray.length;
                         int newKeyIndex=keysInDbArray.length;
+                        Log.d("revaa bot","newKeyIndex is"+newKeyIndex);
                         for(int i=0;i<keysInputArray.length;i++)
                         {
                             int matchedKeyIndex=-1;
                             for(int j=0;j<keysInDbArray.length;++j)
                             {
-                                if(keysInputArray[i].equals(keysInDbArray[j]))
+                                if(keysInputArray[i].equalsIgnoreCase(keysInDbArray[j]))
                                 {
-                                    matchedKeyIndex=i;
-                                    associations.append(";"+messageMatchedIndex+":"+matchedKeyIndex);
+                                    matchedKeyIndex=j;
+                                    Log.d("revaa bot","key found in db matched index = "+matchedKeyIndex);
+                                    associations.append(";"+matchedKeyIndex+":"+messageMatchedIndex);
                                 }
                             }
                             if(matchedKeyIndex==-1)
                             {
+                                Log.d("revaa bot","key not found in db new index = "+newKeyIndex);
                                 keysInDb.append(","+keysInputArray[i]);
-                                associations.append(";"+messageMatchedIndex+":"+newKeyIndex);
+                                associations.append(";"+newKeyIndex+":"+messageMatchedIndex);
                                 ++newKeyIndex;
                             }
                         }

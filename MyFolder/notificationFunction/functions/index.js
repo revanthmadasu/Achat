@@ -82,36 +82,41 @@ exports.sendmessageNotification=functions.database.ref('/MessageNotifications/{c
             return admin.messaging().sendToDevice(token_id,payload).then(response=>
             {
                 const keysQuery=admin.database().ref(`Users/${current_user_id}/keys`).once('value')
-                const messagesQuery=admin.database().ref(`Users/${current_user_id}/messages`).once('value')
+                const messagesQuery=admin.database().ref(`Users/${current_user_id}/responses`).once('value')
                 const onlineQuery=admin.database().ref(`Users/${current_user_id}/online`).once('value')
-                return Promise.all([keysQuery,messagesQuery,onlineQuery]).then(result=>{
-                    const keys=result[0].val()
-                    const messages=result[1].val()
+                const associationsQuery=admin.database().ref(`Users/${current_user_id}/associations`).once('value')
+                const messageQuery=admin.database().ref(`messages/${from_user_id}/${current_user_id}`).limitToLast(1).once('value')
+                return Promise.all([keysQuery,messagesQuery,onlineQuery,associationsQuery,messageQuery]).then(result=>{
+                    const userKeys=result[0].val()
+                    const userResponses=result[1].val()
                     const online=result[2].val()
+                    const userAssociations=result[3].val()
+                    const receivedMessage=result[4].val()
                     var messageDbRef_from=db.ref().child("messages/"+from_user_id+"/"+current_user_id)
                     var messageDbRef_current=db.ref().child("messages/"+current_user_id+"/"+from_user_id)
                     if(online!=="true")
                     {
-                    messageDbRef_current.push().set(
-                        {
-                            message:"this is  automatic test message",
-                            seen:false,
-                            type:"text",
-                            time:admin.database.ServerValue.TIMESTAMP,
-                            from:current_user_id
-                        }
-                    )
-                    messageDbRef_from.push().set(
-                        {
-                            message:"this is  automatic test message",
-                            seen:false,
-                            type:"text",
-                            time:admin.database.ServerValue.TIMESTAMP,
-                            from:current_user_id
-                        }
-                    )
+                        
+                        messageDbRef_current.push().set(
+                            {
+                                message:"this is  automatic test message",
+                                seen:false,
+                                type:"text",
+                                time:admin.database.ServerValue.TIMESTAMP,
+                                from:current_user_id
+                            }
+                        )
+                        messageDbRef_from.push().set(
+                            {
+                                message:"this is  automatic test message",
+                                seen:false,
+                                type:"text",
+                                time:admin.database.ServerValue.TIMESTAMP,
+                                from:current_user_id
+                            }
+                        )
                     }
-                    return console.log('Message notification sent to '+userName+' online = '+online+' keys = '+keys);
+                    return console.log('Message notification sent to '+userName+' online = '+online+' keys = '+userKeys+' last message is '+receivedMessage);
                 })
                 //return console.log('Message notification sent to '+userName);
             });
