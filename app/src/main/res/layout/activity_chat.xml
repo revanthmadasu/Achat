@@ -21,6 +21,7 @@
             android:layout_below="@+id/chat_app_bar"></android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
+    <!--<include android:id="@+id/activity_dict_main"></include>-->
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -65,5 +66,14 @@
             android:background="@android:color/white"
             android:padding="10dp"
             app:srcCompat="@drawable/ic_send_black_24dp" />
+
+        <Button
+            android:id="@+id/dict_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="whatever"
+            android:layout_weight="1"
+
+            android:text="Dictionary" />
     </LinearLayout>
 </RelativeLayout>
