@@ -37,14 +37,13 @@ public class AChat extends Application {
         if (mAuth.getCurrentUser() != null) {
             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users")
                     .child(mAuth.getCurrentUser().getUid());
-            Log.d("Rocky", "achat online msg1");
+
             mUserDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    Log.d("Rocky", "achat online msg2");
                     if (dataSnapshot != null) {
-                        Log.d("Rocky", "achat online msg3");
+                        Log.d("revaa", "disconnecting");
                         mUserDatabase.child("online").onDisconnect().setValue(ServerValue.TIMESTAMP);
 
                     }
@@ -52,9 +51,10 @@ public class AChat extends Application {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    Log.d("revaa", "disconnecting");
                 }
             });
         }
     }
+
 }

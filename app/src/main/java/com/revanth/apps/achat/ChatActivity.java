@@ -288,13 +288,14 @@ public class ChatActivity extends AppCompatActivity {
 
             mChatMessageView.setText("");
 
-            mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("seen").setValue(true);
-            mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
-            mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("lastMessageId").setValue(push_id);
-
             mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("seen").setValue(false);
             mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("timestamp").setValue(ServerValue.TIMESTAMP);
-            mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("lastMessageId").setValue(push_id);
+            mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("lastMessageKey").setValue(push_id);
+
+
+            mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("seen").setValue(false);
+            mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
+            mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("lastMessageId").setValue(push_id);
 
             mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
                 @Override
