@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -48,7 +49,7 @@ public class ChatActivity extends AppCompatActivity {
     private String mChatUser;
     private Toolbar mChatToolbar;
 
-    private DatabaseReference mRootRef,mMessageNotificationsDatabase;
+    private DatabaseReference mRootRef, mMessageNotificationsDatabase;
 
     private TextView mTitleView;
     private TextView mLastSeenView;
@@ -59,6 +60,8 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton mChatAddBtn;
     private ImageButton mChatSendBtn;
     private EditText mChatMessageView;
+    private Button mDictionary;
+
 
     private RecyclerView mMessagesList;
     private SwipeRefreshLayout mRefreshLayout;
@@ -97,7 +100,7 @@ public class ChatActivity extends AppCompatActivity {
         actionBar.setDisplayShowCustomEnabled(true);
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
-        mMessageNotificationsDatabase=FirebaseDatabase.getInstance().getReference().child("MessageNotifications");
+        mMessageNotificationsDatabase = FirebaseDatabase.getInstance().getReference().child("MessageNotifications");
         mAuth = FirebaseAuth.getInstance();
         mCurrentUserId = mAuth.getCurrentUser().getUid();
 
@@ -118,7 +121,7 @@ public class ChatActivity extends AppCompatActivity {
         mChatMessageView = (EditText) findViewById(R.id.chat_message_view);
         mMessagesList = (RecyclerView) findViewById(R.id.messages_list);
         mLinearLayout = new LinearLayoutManager(this);
-
+        mDictionary = (Button) findViewById(R.id.dict_btn);
         mMessagesList.setHasFixedSize(true);
         mMessagesList.setLayoutManager(mLinearLayout);
         mAdapter = new MessageAdapter(messagesList);
@@ -218,7 +221,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 itemPos++;
 
-                if(itemPos == 1){
+                if (itemPos == 1) {
 
                     String messageKey = dataSnapshot.getKey();
 
@@ -232,7 +235,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 mMessagesList.scrollToPosition(messagesList.size() - 1);
 
-             //   mRefreshLayout.setRefreshing(false);
+                //   mRefreshLayout.setRefreshing(false);
 
             }
 
@@ -305,19 +308,16 @@ public class ChatActivity extends AppCompatActivity {
 
                         Log.d("CHAT_LOG", databaseError.getMessage().toString());
 
-                    }
-                    else
-                    {
-                        Map messageNotificationMap=new HashMap();
-                        messageNotificationMap.put("from",mCurrentUserId);
-                        messageNotificationMap.put("type","message");
-                        DatabaseReference messageNotificationDatabase=mMessageNotificationsDatabase.child(mChatUser).push();
+                    } else {
+                        Map messageNotificationMap = new HashMap();
+                        messageNotificationMap.put("from", mCurrentUserId);
+                        messageNotificationMap.put("type", "message");
+                        DatabaseReference messageNotificationDatabase = mMessageNotificationsDatabase.child(mChatUser).push();
                         messageNotificationDatabase.updateChildren(messageNotificationMap, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                                if(databaseError!=null)
-                                {
-                                    Log.d("ChatNotificationError",databaseError.getMessage());
+                                if (databaseError != null) {
+                                    Log.d("ChatNotificationError", databaseError.getMessage());
                                 }
                             }
                         });
@@ -339,10 +339,37 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
             });
+          /* mDictionary.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("dict","Temp1");
+
+                    Intent Dict = new Intent(ChatActivity.this.getApplicationContext(), DictMainActivity.class);
+                    startActivity(Dict);
+
+                }
+            });*/
+         /*  public void whatever(View v){
+                    Log.d("dict","Temp1");
+                    Intent Dict = new Intent(ChatActivity.this, DictMainActivity.class);
+                    startActivity(Dict);
+
+
+                }*/
+
 
 
         }
+    }
 
+    public void whatever(View view) {
+        Log.d("dict", "Temp1");
+        //Intent Dict = new Intent(ChatActivity.this, DictMainActivity.class);
+        try {
+            startActivity(new Intent(ChatActivity.this, DictMainActivity.class));
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
 
     }
 }
