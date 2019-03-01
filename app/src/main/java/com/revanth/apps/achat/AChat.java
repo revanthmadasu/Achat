@@ -1,6 +1,8 @@
 package com.revanth.apps.achat;
 
+import android.app.Activity;
 import android.app.Application;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -14,14 +16,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
-public class AChat extends Application {
+public class AChat extends Application implements Application.ActivityLifecycleCallbacks{
     private DatabaseReference mUserDatabase;
     private FirebaseAuth mAuth;
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Log.d("Rocky", "achat online msg0");
+        registerActivityLifecycleCallbacks(this);
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
@@ -37,14 +38,11 @@ public class AChat extends Application {
         if (mAuth.getCurrentUser() != null) {
             mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users")
                     .child(mAuth.getCurrentUser().getUid());
-            Log.d("Rocky", "achat online msg1");
-            mUserDatabase.addValueEventListener(new ValueEventListener() {
+            /*mUserDatabase.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    Log.d("Rocky", "achat online msg2");
                     if (dataSnapshot != null) {
-                        Log.d("Rocky", "achat online msg3");
                         mUserDatabase.child("online").onDisconnect().setValue(ServerValue.TIMESTAMP);
 
                     }
@@ -54,7 +52,51 @@ public class AChat extends Application {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
-            });
+            });*/
         }
+    }
+    public void onStop()
+    {
+        Log.d("revaa","application stopped");
+    }
+    @Override
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        Log.d("revaa","application created");
+    }
+
+    @Override
+    public void onActivityStarted(Activity activity) {
+        Log.d("revaa","application started");
+
+    }
+
+    @Override
+    public void onActivityResumed(Activity activity) {
+        Log.d("revaa","application resumed");
+        if(mAuth.getCurrentUser()!=null)
+        mUserDatabase.child("online").setValue(true);
+    }
+
+    @Override
+    public void onActivityPaused(Activity activity) {
+        Log.d("revaa","application paused");
+        if(mAuth.getCurrentUser()!=null)
+        mUserDatabase.child("online").setValue(ServerValue.TIMESTAMP);
+    }
+
+    @Override
+    public void onActivityStopped(Activity activity) {
+        Log.d("revaa","application stopped");
+
+    }
+
+    @Override
+    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+    }
+
+    @Override
+    public void onActivityDestroyed(Activity activity) {
+        Log.d("revaa","application destroyed");
     }
 }
