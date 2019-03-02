@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("revaa","application stopped");
          super.onStop();
         if(currentUser!=null) {
-            //mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
+            mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
             //mUserRef.child("lastSeen")
 
         }

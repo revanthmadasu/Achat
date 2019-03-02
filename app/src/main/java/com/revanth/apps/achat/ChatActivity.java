@@ -49,7 +49,7 @@ public class ChatActivity extends AppCompatActivity {
     private String mChatUser;
     private Toolbar mChatToolbar;
 
-    private DatabaseReference mRootRef, mMessageNotificationsDatabase;
+    private DatabaseReference mRootRef, mMessageNotificationsDatabase,mUserDatabase;
 
     private TextView mTitleView;
     private TextView mLastSeenView;
@@ -103,7 +103,8 @@ public class ChatActivity extends AppCompatActivity {
         mMessageNotificationsDatabase = FirebaseDatabase.getInstance().getReference().child("MessageNotifications");
         mAuth = FirebaseAuth.getInstance();
         mCurrentUserId = mAuth.getCurrentUser().getUid();
-
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users")
+                .child(mAuth.getCurrentUser().getUid());
         mChatUser = getIntent().getStringExtra("user_id");
         //String userName = mRootRef.child("Users").child(mChatUser).child("name").getKey();
         //Log.d("Rocky ChatActivity","username is "+userName);
