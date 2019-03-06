@@ -72,11 +72,11 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         Log.d("revaa","application stopped");
          super.onStop();
-        if(currentUser!=null) {
-            mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
+        //if(currentUser!=null) {
+          //  mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
             //mUserRef.child("lastSeen")
 
-        }
+       // }
     }
 
     private void sendToStart() {
@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         if(item.getItemId()==R.id.main_logout_btn)
         {
+            mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
             FirebaseAuth.getInstance().signOut();
             sendToStart();
 
