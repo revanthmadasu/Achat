@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:background="@color/colorPrimary">
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/custom_bar_image"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_alignParentEnd="true"
+        android:layout_width="55dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="6dp"
         android:layout_marginRight="10dp"
         android:src="@drawable/default_avatar" />
 
@@ -17,18 +22,33 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:layout_marginStart="69dp"
+        android:layout_marginTop="7dp"
         android:text="Display Name"
         android:textColor="@android:color/white"
         android:textSize="18sp" />
+
 
     <TextView
         android:id="@+id/custom_bar_seen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_below="@+id/custom_bar_title"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="69dp"
+        android:layout_marginTop="4dp"
         android:text="Last Seen"
         android:textColor="@android:color/white"
         android:textSize="13sp" />
+
+    <ImageButton
+        android:id="@+id/Call_btn"
+        android:layout_width="65dp"
+        android:layout_height="55dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="223dp"
+        android:layout_marginTop="0dp"
+        app:srcCompat="@android:drawable/stat_sys_phone_call" />
 
 </RelativeLayout>

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ChatActivity">
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/message_swipe_layout"
         android:layout_width="match_parent"
@@ -21,7 +22,6 @@
             android:layout_below="@+id/chat_app_bar"></android.support.v7.widget.RecyclerView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
-    <!--<include android:id="@+id/activity_dict_main"></include>-->
 
     <LinearLayout
         android:id="@+id/linearLayout"

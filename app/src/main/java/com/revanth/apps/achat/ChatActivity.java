@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,6 +62,7 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton mChatSendBtn;
     private EditText mChatMessageView;
     private Button mDictionary;
+    private ImageButton mCallBtn;
 
 
     private RecyclerView mMessagesList;
@@ -122,6 +124,7 @@ public class ChatActivity extends AppCompatActivity {
         mMessagesList = (RecyclerView) findViewById(R.id.messages_list);
         mLinearLayout = new LinearLayoutManager(this);
         mDictionary = (Button) findViewById(R.id.dict_btn);
+        mCallBtn=(ImageButton) findViewById(R.id.chat_add_btn);
         mMessagesList.setHasFixedSize(true);
         mMessagesList.setLayoutManager(mLinearLayout);
         mAdapter = new MessageAdapter(messagesList);
@@ -205,6 +208,19 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+       /* mCallBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (call == null) {
+                    call = sinchClient.getCallClient().callUser("call-recipient-id");
+                    button.setText("Hang Up");
+                } else {
+                    call.hangup();
+                    call = null;
+                    button.setText("Call");
+                }
+            }
+        });*/
     }
 
     private void loadMessages() {
@@ -370,5 +386,11 @@ public class ChatActivity extends AppCompatActivity {
            e.printStackTrace();
         }
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.chat_menu,menu);
+        return true;
     }
 }
