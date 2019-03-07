@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -391,6 +392,24 @@ public class ChatActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.chat_menu,menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        if(item.getItemId()==R.id.delete_chat_btn)
+        {
+            Intent scheduleIntent=new Intent(ChatActivity.this,SetScheduleMsg.class);
+            scheduleIntent.putExtra("receiverId",mChatUser);
+            startActivity(scheduleIntent );
+
+       }
+        if(item.getItemId() == R.id.sch_chat_btn){
+
+
+
+        }
+
         return true;
     }
 }

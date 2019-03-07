@@ -38,15 +38,13 @@
 
     <ImageView
         android:id="@+id/user_single_online_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/user_single_name"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="102dp"
+        android:layout_width="24dp"
+        android:layout_height="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="298dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="44dp"
-        android:layout_toEndOf="@+id/user_single_name"
+        android:layout_marginTop="24dp"
         android:visibility="invisible"
         app:srcCompat="@drawable/online_icon" />
 
