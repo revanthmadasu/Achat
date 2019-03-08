@@ -78,6 +78,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".TrainBot" />
+        <receiver android:name=".AlarmActionClass"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
 
 </manifest>
