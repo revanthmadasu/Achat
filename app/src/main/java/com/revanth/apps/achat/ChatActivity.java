@@ -401,14 +401,14 @@ public class ChatActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         if(item.getItemId()==R.id.delete_chat_btn)
         {
-            Intent scheduleIntent=new Intent(ChatActivity.this,SetScheduleMsg.class);
-            scheduleIntent.putExtra("receiverId",mChatUser);
-            startActivity(scheduleIntent );
+
 
        }
         if(item.getItemId() == R.id.sch_chat_btn){
 
-
+            Intent scheduleIntent=new Intent(ChatActivity.this,SetScheduleMsg.class);
+            scheduleIntent.putExtra("receiverId",mChatUser);
+            startActivity(scheduleIntent );
 
         }
 

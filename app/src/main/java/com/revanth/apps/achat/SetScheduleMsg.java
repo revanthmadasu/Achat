@@ -5,9 +5,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TimePicker;
@@ -18,20 +20,25 @@ public class SetScheduleMsg extends AppCompatActivity {
 
     private TimePicker mTimePicker;
     private Button mSetMessageBtn;
-    private TextInputLayout mMessageTextLayout;
+    private TextInputEditText mMessageEditText;
     private String mReceiverId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_set_schedule_msg);
         mTimePicker=(TimePicker) findViewById(R.id.timePicker);
         mSetMessageBtn=(Button)findViewById(R.id.set_time_message_btn);
-        mMessageTextLayout=(TextInputLayout)findViewById(R.id.schedule_msg_inputLayout);
+        mMessageEditText=(TextInputEditText)findViewById(R.id.schedule_msg_inputLayout);
         mReceiverId=getIntent().getStringExtra("receiverId");
 
+        if(mSetMessageBtn==null)
+        {
+            Log.d("revaa","Button is null");
+        }
         mSetMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String response=mMessageTextLayout.getEditText().getText().toString();
+                String message=mMessageEditText.getText().toString();
                 Calendar calendar= Calendar.getInstance();
                 if(Build.VERSION.SDK_INT>=23)
                     calendar.set(
@@ -51,17 +58,16 @@ public class SetScheduleMsg extends AppCompatActivity {
                             mTimePicker.getCurrentMinute(),
                             0
                     );
-                setAlarm(calendar.getTimeInMillis());
+                setAlarm(calendar.getTimeInMillis(),message);
             }
         });
-        setContentView(R.layout.activity_set_schedule_msg);
     }
-    private void setAlarm(long timeInMillis)
+    private void setAlarm(long timeInMillis,String message)
     {
         AlarmManager alarmManager=(AlarmManager)getSystemService(Context.ALARM_SERVICE);
         Intent intent=new Intent(this,AlarmActionClass.class);
         intent.putExtra("receiverId",mReceiverId);
-
+        intent.putExtra("message",message);
         PendingIntent pendingIntent=PendingIntent.getBroadcast(this,0,intent,0);
 
         alarmManager.set(AlarmManager.RTC_WAKEUP,timeInMillis,pendingIntent);

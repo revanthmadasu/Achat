@@ -57,36 +57,36 @@ public class AChat extends Application implements Application.ActivityLifecycleC
     }
     public void onStop()
     {
-        Log.d("revaa","application stopped");
+        //Log.d("revaa","application stopped");
     }
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-        Log.d("revaa","application created");
+        //Log.d("revaa","application created");
     }
 
     @Override
     public void onActivityStarted(Activity activity) {
-        Log.d("revaa","application started");
+        //Log.d("revaa","application started");
 
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
-        Log.d("revaa","application resumed");
+        //Log.d("revaa","application resumed");
         if(mAuth.getCurrentUser()!=null)
         mUserDatabase.child("online").setValue(true);
     }
 
     @Override
     public void onActivityPaused(Activity activity) {
-        Log.d("revaa","application paused");
+        //Log.d("revaa","application paused");
         if(mAuth.getCurrentUser()!=null)
         mUserDatabase.child("online").setValue(ServerValue.TIMESTAMP);
     }
 
     @Override
     public void onActivityStopped(Activity activity) {
-        Log.d("revaa","application stopped");
+        //Log.d("revaa","application stopped");
 
     }
 
