@@ -11,15 +11,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 
 /**
@@ -28,13 +33,13 @@ import com.google.firebase.database.ValueEventListener;
 public class RequestsFragment extends Fragment {
 
     private RecyclerView myRequestsList;
-    private View myMainView;
-    private DatabaseReference mFriendRequestsDatabase,mUsersDatabase;
+    private View myMainView,mProfileView;
+    private DatabaseReference mFriendRequestsDatabase,mAllFriendRequestsDatabase,mUsersDatabase;
     private FirebaseAuth mAuth;
     String mCurrentUserId;
 
 
-    private DatabaseReference friendsDatabaseRef;
+    private DatabaseReference mFriendDatabase;
     private Button acceptBtn;
     private Button declineBtn;
     private FirebaseRecyclerOptions<Requests> options;
@@ -44,13 +49,13 @@ public class RequestsFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         myMainView = inflater.inflate(R.layout.fragment_requests, container, false);
         myRequestsList = (RecyclerView)myMainView.findViewById(R.id.requests_list);
+        mProfileView=inflater.inflate(R.layout.activity_profile, container, false);
 
 
 
@@ -59,9 +64,10 @@ public class RequestsFragment extends Fragment {
 
         mFriendRequestsDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_req").child(mCurrentUserId);
 
+        mAllFriendRequestsDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_req");
 
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-        friendsDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Friends");
+        mFriendDatabase = FirebaseDatabase.getInstance().getReference().child("Friends");
 
         myRequestsList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -108,6 +114,69 @@ public class RequestsFragment extends Fragment {
                         holder.setThumb_user_image(thumb_image,getContext());
                         holder.setUser_Status(status);
                         holder.setUserName(userName);
+
+                        holder.mView.findViewById(R.id.request_accept_btn).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                final String currentDate= DateFormat.getDateTimeInstance().format(new Date());
+                                mFriendDatabase.child(mCurrentUserId).child(list_user_id).child("date").setValue(currentDate)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                mFriendDatabase.child(list_user_id).child(mCurrentUserId).child("date").setValue(currentDate)
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                mAllFriendRequestsDatabase.child(mCurrentUserId).child(list_user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+                                                                        mAllFriendRequestsDatabase.child(list_user_id).child(mCurrentUserId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                            @Override
+                                                                            public void onSuccess(Void aVoid) {
+
+                                                                                Button mProfileSendReqBtn=(Button)mProfileView.findViewById(R.id.profile_send_req_btn);
+                                                                                mProfileSendReqBtn.setEnabled(true);
+                                                                                mProfileSendReqBtn.setText("Unfriend");
+
+                                                                                Button mDeclineButton=(Button)mProfileView.findViewById(R.id.profile_decline_btn);
+                                                                                mDeclineButton.setVisibility(View.INVISIBLE);
+                                                                                mDeclineButton.setEnabled(false);
+
+                                                                                Toast.makeText(getContext(),"Successfully added friend",Toast.LENGTH_SHORT).show();
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                            }
+                                        });
+                            }
+                        });
+
+                        holder.mView.findViewById(R.id.request_decline_btn).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mAllFriendRequestsDatabase.child(mCurrentUserId).child(list_user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        mAllFriendRequestsDatabase.child(list_user_id).child(mCurrentUserId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+
+                                                Button mProfileSendReqBtn=(Button)mProfileView.findViewById(R.id.profile_send_req_btn);
+                                                mProfileSendReqBtn.setEnabled(true);
+                                                mProfileSendReqBtn.setText("Send Friend Request");
+
+                                                Button mDeclineButton=(Button)mProfileView.findViewById(R.id.profile_decline_btn);
+                                                mDeclineButton.setVisibility(View.INVISIBLE);
+                                                mDeclineButton.setEnabled(false);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
                     }
 
                     @Override
