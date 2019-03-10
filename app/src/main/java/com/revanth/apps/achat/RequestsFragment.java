@@ -1,7 +1,6 @@
 package com.revanth.apps.achat;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -11,12 +10,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 /**
@@ -24,19 +27,19 @@ import com.google.firebase.database.FirebaseDatabase;
  */
 public class RequestsFragment extends Fragment {
 
-    private RecyclerView mRequestList;
-
-    private DatabaseReference mRequestDatabase;
-    private DatabaseReference mUsersDatabase;
-
+    private RecyclerView myRequestsList;
+    private View myMainView;
+    private DatabaseReference mFriendRequestsDatabase,mUsersDatabase;
     private FirebaseAuth mAuth;
+    String mCurrentUserId;
 
-    private FirebaseRecyclerOptions<Users> options;
-    private FirebaseRecyclerAdapter<Users,UsersViewHolder> mFirebaseRequestAdapter;
 
-    private String mCurrent_user_id;
+    private DatabaseReference friendsDatabaseRef;
+    private Button acceptBtn;
+    private Button declineBtn;
+    private FirebaseRecyclerOptions<Requests> options;
+    FirebaseRecyclerAdapter<Requests,RequestViewHolder> mReqsRecyclerViewAdapter;
 
-    private View mMainView;
     public RequestsFragment() {
         // Required empty public constructor
     }
@@ -45,51 +48,78 @@ public class RequestsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        myMainView = inflater.inflate(R.layout.fragment_requests, container, false);
+        myRequestsList = (RecyclerView)myMainView.findViewById(R.id.requests_list);
+
+
+
+        mAuth = FirebaseAuth.getInstance();
+        mCurrentUserId = mAuth.getCurrentUser().getUid();
+
+        mFriendRequestsDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_req").child(mCurrentUserId);
+
+
+        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        friendsDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Friends");
+
+        myRequestsList.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        myRequestsList.setLayoutManager(linearLayoutManager);
+
+
+
         // Inflate the layout for this fragment
-        mMainView= inflater.inflate(R.layout.fragment_requests, container, false);
+        return myMainView;
+    }
 
-        mAuth=FirebaseAuth.getInstance();
-        mCurrent_user_id=mAuth.getCurrentUser().getUid();
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("revaa requestsfragment", "In Start");
+        options = new FirebaseRecyclerOptions.Builder<Requests>().setQuery(mFriendRequestsDatabase, Requests.class).build();
 
-        mRequestDatabase=FirebaseDatabase.getInstance().getReference()
-                .child("Friend_req").child(mCurrent_user_id);
-        mRequestDatabase.keepSynced(true);
-
-        mUsersDatabase=FirebaseDatabase.getInstance().getReference().child("Users");
-        mUsersDatabase.keepSynced(true);
-
-        mRequestList=(RecyclerView)mMainView.findViewById(R.id.requests_list);
-        mRequestList.setHasFixedSize(true);
-        mRequestList.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        options=new FirebaseRecyclerOptions.Builder<Users>().setQuery(mUsersDatabase,Users.class).build();
-        mFirebaseRequestAdapter=new FirebaseRecyclerAdapter<Users, UsersViewHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull Users model) {
-
-                final String user_id=getRef(position).getKey();
-
-                holder.mView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent profileIntent= new Intent(getContext(),ProfileActivity.class);
-                        profileIntent.putExtra("user_id",user_id);
-                        startActivity(profileIntent);
-                    }
-                });
-            }
+        mReqsRecyclerViewAdapter= new FirebaseRecyclerAdapter<Requests, RequestViewHolder>(options)
+        {
 
             @NonNull
             @Override
-            public UsersViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                View view=LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.users_single_layout,viewGroup,false);
+            public RequestViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                View view=LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.friend_request_all_users_layout,viewGroup,false);
                 Log.d("Rocky","In Create");
-                return new UsersViewHolder(view);
+                return new RequestViewHolder(view);
+            }
 
+            @Override
+            protected void onBindViewHolder(@NonNull final RequestViewHolder holder, int position, @NonNull Requests model) {
+                final String list_user_id=getRef(position).getKey();
+
+                mUsersDatabase.child(list_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        Log.d("revaa requestsfragment",dataSnapshot.toString());
+                        String userName=dataSnapshot.child("name").getValue().toString();
+                        String thumb_image=dataSnapshot.child("thumb_image").getValue().toString();
+                        String status=dataSnapshot.child("status").getValue().toString();
+
+                        holder.setThumb_user_image(thumb_image,getContext());
+                        holder.setUser_Status(status);
+                        holder.setUserName(userName);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         };
+        mReqsRecyclerViewAdapter.startListening();
+        myRequestsList.setAdapter(mReqsRecyclerViewAdapter);
 
-        return mMainView;
     }
-
 }
+

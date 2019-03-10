@@ -14,7 +14,6 @@ public class Users {
         this.image="https://firebasestorage.googleapis.com/v0/b/achat-4df50.appspot.com/o/profile_images%2FDOEv3FVSRQbzv7nMKX9b3eqqd0z1.jpg?alt=media&token=806ae57a-ea22-4fc7-872a-3303a17f922f";
         this.status="Default Status";
         this.thumb_image="Default ThumbImage";
-        Log.d("rockstar","User instantiated with default constructor");
     }
     public Users(String name,String image,String status,String thumb_image) {
         this.name=name;
@@ -54,5 +53,15 @@ public class Users {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "name='" + name + '\'' +
+                ", image='" + image + '\'' +
+                ", status='" + status + '\'' +
+                ", thumb_image='" + thumb_image + '\'' +
+                '}';
     }
 }
