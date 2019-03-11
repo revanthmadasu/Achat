@@ -28,7 +28,7 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
 
     private String mCurrentUsetId;
     private Spinner spinner;
-    private static final String[] paths = {"Friends", "Family", "Others"};
+    private static final String[] paths = {"Friends", "Family"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,8 +131,6 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
             case 0:
                 break;
             case 1:
-                break;
-            case 2:
                 break;
 
         }
