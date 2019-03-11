@@ -16,9 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +28,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -100,40 +106,114 @@ public class FriendsFragment extends Fragment {
                 });
 
 
-             holder.mView.setOnClickListener(new View.OnClickListener() {
+             holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
                  @Override
-                 public void onClick(View v) {
+                 public boolean onLongClick(View v) {
 
-                     CharSequence options[] = new CharSequence[]{"Open Profile", "Send message"};
+                     CharSequence options[] = new CharSequence[]{"Open Profile","auto-reply: Friend","auto-reply: Family","auto-reply: Both","auto-reply: None"};
 
                      final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
                      builder.setTitle("Select Options");
                      builder.setItems(options, new DialogInterface.OnClickListener() {
                          @Override
-                         public void onClick(DialogInterface dialogInterface, int i) {
+                         public void onClick(DialogInterface dialogInterface, final int i) {
 
                              //Click Event for each item.
-                             if(i == 0){
-
+                             if(i==0)
+                             {
                                  Intent profileIntent = new Intent(getContext(), ProfileActivity.class);
                                  profileIntent.putExtra("user_id", list_user_id);
                                  startActivity(profileIntent);
+                                 Log.d("revaa friendsFragment","case 0");
+                             }
+                             else {
 
+                                 mUsersDatabase.child(mCurrent_user_id).addValueEventListener(new ValueEventListener() {
+                                     @Override
+                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                         final String friendsCat, familyCat, noneCat, allCat;
+                                         friendsCat = dataSnapshot.child("friends_cat").getValue().toString();
+                                         familyCat = dataSnapshot.child("family_cat").getValue().toString();
+                                         allCat = dataSnapshot.child("all_cat").getValue().toString();
+                                         noneCat = dataSnapshot.child("none_cat").getValue().toString();
+                                         String resString="";
+
+                                         String selectedCat="";
+                                         List selectedCatIds;
+                                         String category="";
+
+                                         int count = 0;
+                                         Log.d("revaa friendsfragment", "called " + i);
+                                         boolean changeRequired=false;
+                                         switch (i) {
+                                             case 1:
+                                                 selectedCat=friendsCat;
+                                                 category="friends_cat";
+                                                 break;
+                                             case 2:
+                                                 selectedCat=familyCat;
+                                                 category="family_cat";
+                                                 break;
+                                         }
+
+                                         //boolean changeRequired = false;
+                                         // have some friends
+                                         if (!selectedCat.equals("")) {
+                                             Log.d("revaa friendsfragment", "ids not empty x" + selectedCat + "x");
+                                             selectedCatIds = Arrays.asList(selectedCat.split(";;;"));
+                                             if (selectedCatIds.contains(list_user_id)) {
+                                                 Log.d("revaa friendsfragment", "id already there in freinds");
+                                                 Toast.makeText(getContext(),"Already exists in category",Toast.LENGTH_SHORT);
+                                             }
+                                             else
+                                             {
+                                                 resString=selectedCat+";;;"+list_user_id;
+                                                 changeRequired=true;
+                                             }
+                                         }
+
+                                         // no friends
+                                         else
+                                         {
+                                             Log.d("revaa friendsfragment", "id not there in friends.have to add. list id = " + list_user_id);
+                                             resString=list_user_id;
+                                             changeRequired=true;
+                                         }
+
+                                         //  update to database
+                                         if(changeRequired)
+                                             mUsersDatabase.child(mCurrent_user_id).child(category).setValue(resString).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                 @Override
+                                                 public void onSuccess(Void aVoid) {
+                                                     Toast.makeText(getContext(), "Successfully added to friends category", Toast.LENGTH_SHORT);
+                                                 }
+                                             });
+                                     }
+
+                                     @Override
+                                     public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                     }
+                                 });
                              }
 
-                             if(i == 1){
-
-                                Intent chatIntent = new Intent(getContext(), ChatActivity.class);
-                                 chatIntent.putExtra("user_id", list_user_id);
-                                 //chatIntent.putExtra("user_name", username);
-                                 startActivity(chatIntent);
-                             }
                          }
                      });
                      builder.show();
+                     return true;
                  }
 
+             });
+
+             holder.mView.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                     Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                     chatIntent.putExtra("user_id", list_user_id);
+                     //chatIntent.putExtra("user_name", username);
+                     startActivity(chatIntent);
+                 }
              });
 
             }

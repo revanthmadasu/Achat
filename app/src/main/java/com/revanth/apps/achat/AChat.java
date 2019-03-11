@@ -79,7 +79,7 @@ public class AChat extends Application implements Application.ActivityLifecycleC
 
     @Override
     public void onActivityPaused(Activity activity) {
-        //Log.d("revaa","application paused");
+        Log.d("revaa","application paused");
         if(mAuth.getCurrentUser()!=null)
         mUserDatabase.child("online").setValue(ServerValue.TIMESTAMP);
     }

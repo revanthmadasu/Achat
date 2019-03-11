@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/set_as_friend_btn"
+        android:title="auto-reply: Friend" />
+    <item
+        android:id="@+id/set_as_family_btn"
+        android:title="auto-reply: Family" />
+    <item
+        android:id="@+id/set_as_both_btn"
+        android:title="auto-reply: Both" />
+    <item
+        android:id="@+id/set_as_none_btn"
+        android:title="auto-reply: None" />
+</menu>
