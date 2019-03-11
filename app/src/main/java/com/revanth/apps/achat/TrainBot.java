@@ -7,7 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -16,13 +19,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class TrainBot extends AppCompatActivity {
+public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private TextInputEditText keysInput;
     private TextInputEditText messageInput;
     private Button addData;
     private DatabaseReference mCurrentUserDatabase;
     private FirebaseAuth mAuth;
+
     private String mCurrentUsetId;
+    private Spinner spinner;
+    private static final String[] paths = {"Friends", "Family", "Others"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +39,14 @@ public class TrainBot extends AppCompatActivity {
         messageInput=(TextInputEditText)findViewById(R.id.bot_messages_input);
         addData=(Button)findViewById(R.id.bot_add_button);
         Log.d("rev","Entered");
+        spinner = (Spinner)findViewById(R.id.spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(TrainBot.this,
+                android.R.layout.simple_spinner_item,paths);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
 
         mCurrentUserDatabase=FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUsetId);
         addData.setOnClickListener(new View.OnClickListener() {
@@ -109,5 +123,24 @@ public class TrainBot extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        switch (i) {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }
