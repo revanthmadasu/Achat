@@ -32,6 +32,7 @@ public class TrainBot extends AppCompatActivity {
         keysInput=(TextInputEditText)findViewById(R.id.bot_keys_input);
         messageInput=(TextInputEditText)findViewById(R.id.bot_messages_input);
         addData=(Button)findViewById(R.id.bot_add_button);
+        Log.d("rev","Entered");
 
         mCurrentUserDatabase=FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUsetId);
         addData.setOnClickListener(new View.OnClickListener() {

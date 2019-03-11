@@ -16,8 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,7 +49,7 @@ public class ChatActivity extends AppCompatActivity {
     private String mChatUser;
     private Toolbar mChatToolbar;
 
-    private DatabaseReference mRootRef, mMessageNotificationsDatabase,mUserDatabase;
+    private DatabaseReference mRootRef, mMessageNotificationsDatabase;
 
     private TextView mTitleView;
     private TextView mLastSeenView;
@@ -63,7 +61,6 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton mChatSendBtn;
     private EditText mChatMessageView;
     private Button mDictionary;
-    private ImageButton mCallBtn;
 
 
     private RecyclerView mMessagesList;
@@ -106,8 +103,7 @@ public class ChatActivity extends AppCompatActivity {
         mMessageNotificationsDatabase = FirebaseDatabase.getInstance().getReference().child("MessageNotifications");
         mAuth = FirebaseAuth.getInstance();
         mCurrentUserId = mAuth.getCurrentUser().getUid();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users")
-                .child(mAuth.getCurrentUser().getUid());
+
         mChatUser = getIntent().getStringExtra("user_id");
         //String userName = mRootRef.child("Users").child(mChatUser).child("name").getKey();
         //Log.d("Rocky ChatActivity","username is "+userName);
@@ -126,7 +122,6 @@ public class ChatActivity extends AppCompatActivity {
         mMessagesList = (RecyclerView) findViewById(R.id.messages_list);
         mLinearLayout = new LinearLayoutManager(this);
         mDictionary = (Button) findViewById(R.id.dict_btn);
-        mCallBtn=(ImageButton) findViewById(R.id.chat_add_btn);
         mMessagesList.setHasFixedSize(true);
         mMessagesList.setLayoutManager(mLinearLayout);
         mAdapter = new MessageAdapter(messagesList);
@@ -210,19 +205,6 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-       /* mCallBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (call == null) {
-                    call = sinchClient.getCallClient().callUser("call-recipient-id");
-                    button.setText("Hang Up");
-                } else {
-                    call.hangup();
-                    call = null;
-                    button.setText("Call");
-                }
-            }
-        });*/
     }
 
     private void loadMessages() {
@@ -309,14 +291,13 @@ public class ChatActivity extends AppCompatActivity {
 
             mChatMessageView.setText("");
 
-            mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("seen").setValue(false);
-            mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("timestamp").setValue(ServerValue.TIMESTAMP);
-            mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("lastMessageKey").setValue(push_id);
-
-
-            mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("seen").setValue(false);
+            mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("seen").setValue(true);
             mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("timestamp").setValue(ServerValue.TIMESTAMP);
             mRootRef.child("Chat").child(mCurrentUserId).child(mChatUser).child("lastMessageId").setValue(push_id);
+
+            mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("seen").setValue(false);
+            mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("timestamp").setValue(ServerValue.TIMESTAMP);
+            mRootRef.child("Chat").child(mChatUser).child(mCurrentUserId).child("lastMessageId").setValue(push_id);
 
             mRootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
                 @Override
@@ -361,18 +342,14 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Log.d("dict","Temp1");
-
                     Intent Dict = new Intent(ChatActivity.this.getApplicationContext(), DictMainActivity.class);
                     startActivity(Dict);
-
                 }
             });*/
          /*  public void whatever(View v){
                     Log.d("dict","Temp1");
                     Intent Dict = new Intent(ChatActivity.this, DictMainActivity.class);
                     startActivity(Dict);
-
-
                 }*/
 
 
@@ -386,32 +363,8 @@ public class ChatActivity extends AppCompatActivity {
         try {
             startActivity(new Intent(ChatActivity.this, DictMainActivity.class));
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
 
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.chat_menu,menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        super.onOptionsItemSelected(item);
-        if(item.getItemId()==R.id.delete_chat_btn)
-        {
-
-
-       }
-        if(item.getItemId() == R.id.sch_chat_btn){
-
-            Intent scheduleIntent=new Intent(ChatActivity.this,SetScheduleMsg.class);
-            scheduleIntent.putExtra("receiverId",mChatUser);
-            startActivity(scheduleIntent );
-
-        }
-
-        return true;
     }
 }

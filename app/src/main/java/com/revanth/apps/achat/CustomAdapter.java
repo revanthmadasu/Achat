@@ -21,10 +21,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            /*this.expandable= (RelativeLayout)itemView.findViewById(R.id.expandableLayout);
+            this.expandable= (RelativeLayout)itemView.findViewById(R.id.expandableLayout);
             this.word= (TextView)itemView.findViewById(R.id.wordtext);
             this.meaning = (TextView) itemView.findViewById(R.id.meaningtext);
-            */
+
         }
     }
 
@@ -35,7 +35,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent,
                                            int viewType) {
-        /*View view = LayoutInflater.from(parent.getContext())
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_view_row, parent, false);
 
         final MyViewHolder myViewHolder = new MyViewHolder(view);
@@ -67,8 +67,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         });
 
         return myViewHolder;
-        */
-        return null;
     }
 
     @Override
