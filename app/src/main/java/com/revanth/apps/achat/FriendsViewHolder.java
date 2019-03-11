@@ -3,15 +3,19 @@ package com.revanth.apps.achat;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ServerValue;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FriendsViewHolder extends RecyclerView.ViewHolder {
+
 
     View mView;
 
@@ -46,5 +50,10 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder {
         {
             userOnlineView.setVisibility(View.INVISIBLE);
         }
+
+
     }
+
+
+
 }

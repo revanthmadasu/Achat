@@ -14,7 +14,7 @@ class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         switch(position) {
             case 0:
-                RequestFragment requestsFragment = new RequestFragment();
+                RequestsFragment requestsFragment = new RequestsFragment();
                 return requestsFragment;
 
             case 1:

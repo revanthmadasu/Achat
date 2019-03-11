@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        Log.d("revaa","application started");
         if(currentUser==null)
         {
            sendToStart();
@@ -68,13 +70,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop()
     {
         FirebaseUser currentUser = mAuth.getCurrentUser();
-
+        Log.d("revaa","application stopped");
          super.onStop();
-        if(currentUser!=null) {
-            mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
+        //if(currentUser!=null) {
+          //  mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
             //mUserRef.child("lastSeen")
 
-        }
+       // }
     }
 
     private void sendToStart() {
@@ -95,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         if(item.getItemId()==R.id.main_logout_btn)
         {
+            mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
             FirebaseAuth.getInstance().signOut();
             sendToStart();
 

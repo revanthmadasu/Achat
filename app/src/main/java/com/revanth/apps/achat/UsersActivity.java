@@ -55,6 +55,7 @@ public class UsersActivity extends AppCompatActivity {
 
             @Override
             protected void onBindViewHolder(@NonNull UsersViewHolder holder, int position, @NonNull Users model) {
+                Log.d("revaa usersactivity",model.toString());
                 holder.setDisplayName(model.getName());
                 holder.setUserStatus(model.getStatus());
                 holder.setUserImage(model.getThumb_image(),getApplicationContext());
@@ -69,13 +70,12 @@ public class UsersActivity extends AppCompatActivity {
                         startActivity(profileIntent);
                     }
                 });
-                Log.d("rockstar","Binding is done");
             }
 
             @NonNull
             @Override
             public UsersViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                Log.d("rockstar","context is set");
+
                 View view=LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.users_single_layout,viewGroup,false);
                 return new UsersViewHolder(view);
             }

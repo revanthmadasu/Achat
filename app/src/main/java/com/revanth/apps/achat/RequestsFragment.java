@@ -2,10 +2,29 @@ package com.revanth.apps.achat;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
+
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 
 /**
@@ -13,17 +32,163 @@ import android.view.ViewGroup;
  */
 public class RequestsFragment extends Fragment {
 
+    private RecyclerView myRequestsList;
+    private View myMainView,mProfileView;
+    private DatabaseReference mFriendRequestsDatabase,mAllFriendRequestsDatabase,mUsersDatabase;
+    private FirebaseAuth mAuth;
+    String mCurrentUserId;
+
+
+    private DatabaseReference mFriendDatabase;
+    private Button acceptBtn;
+    private Button declineBtn;
+    private FirebaseRecyclerOptions<Requests> options;
+    FirebaseRecyclerAdapter<Requests,RequestViewHolder> mReqsRecyclerViewAdapter;
 
     public RequestsFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        myMainView = inflater.inflate(R.layout.fragment_requests, container, false);
+        myRequestsList = (RecyclerView)myMainView.findViewById(R.id.requests_list);
+        mProfileView=inflater.inflate(R.layout.activity_profile, container, false);
+
+
+
+        mAuth = FirebaseAuth.getInstance();
+        mCurrentUserId = mAuth.getCurrentUser().getUid();
+
+        mFriendRequestsDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_req").child(mCurrentUserId);
+
+        mAllFriendRequestsDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_req");
+
+        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
+        mFriendDatabase = FirebaseDatabase.getInstance().getReference().child("Friends");
+
+        myRequestsList.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        myRequestsList.setLayoutManager(linearLayoutManager);
+
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_requests, container, false);
+        return myMainView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("revaa requestsfragment", "In Start");
+        options = new FirebaseRecyclerOptions.Builder<Requests>().setQuery(mFriendRequestsDatabase, Requests.class).build();
+
+        mReqsRecyclerViewAdapter= new FirebaseRecyclerAdapter<Requests, RequestViewHolder>(options)
+        {
+
+            @NonNull
+            @Override
+            public RequestViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                View view=LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.friend_request_all_users_layout,viewGroup,false);
+                Log.d("Rocky","In Create");
+                return new RequestViewHolder(view);
+            }
+
+            @Override
+            protected void onBindViewHolder(@NonNull final RequestViewHolder holder, int position, @NonNull Requests model) {
+                final String list_user_id=getRef(position).getKey();
+
+                mUsersDatabase.child(list_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        Log.d("revaa requestsfragment",dataSnapshot.toString());
+                        String userName=dataSnapshot.child("name").getValue().toString();
+                        String thumb_image=dataSnapshot.child("thumb_image").getValue().toString();
+                        String status=dataSnapshot.child("status").getValue().toString();
+
+                        holder.setThumb_user_image(thumb_image,getContext());
+                        holder.setUser_Status(status);
+                        holder.setUserName(userName);
+
+                        holder.mView.findViewById(R.id.request_accept_btn).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                final String currentDate= DateFormat.getDateTimeInstance().format(new Date());
+                                mFriendDatabase.child(mCurrentUserId).child(list_user_id).child("date").setValue(currentDate)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                mFriendDatabase.child(list_user_id).child(mCurrentUserId).child("date").setValue(currentDate)
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                mAllFriendRequestsDatabase.child(mCurrentUserId).child(list_user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+                                                                        mAllFriendRequestsDatabase.child(list_user_id).child(mCurrentUserId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                            @Override
+                                                                            public void onSuccess(Void aVoid) {
+
+                                                                                Button mProfileSendReqBtn=(Button)mProfileView.findViewById(R.id.profile_send_req_btn);
+                                                                                mProfileSendReqBtn.setEnabled(true);
+                                                                                mProfileSendReqBtn.setText("Unfriend");
+
+                                                                                Button mDeclineButton=(Button)mProfileView.findViewById(R.id.profile_decline_btn);
+                                                                                mDeclineButton.setVisibility(View.INVISIBLE);
+                                                                                mDeclineButton.setEnabled(false);
+
+                                                                                Toast.makeText(getContext(),"Successfully added friend",Toast.LENGTH_SHORT).show();
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                            }
+                                        });
+                            }
+                        });
+
+                        holder.mView.findViewById(R.id.request_decline_btn).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mAllFriendRequestsDatabase.child(mCurrentUserId).child(list_user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        mAllFriendRequestsDatabase.child(list_user_id).child(mCurrentUserId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+
+                                                Button mProfileSendReqBtn=(Button)mProfileView.findViewById(R.id.profile_send_req_btn);
+                                                mProfileSendReqBtn.setEnabled(true);
+                                                mProfileSendReqBtn.setText("Send Friend Request");
+
+                                                Button mDeclineButton=(Button)mProfileView.findViewById(R.id.profile_decline_btn);
+                                                mDeclineButton.setVisibility(View.INVISIBLE);
+                                                mDeclineButton.setEnabled(false);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        };
+        mReqsRecyclerViewAdapter.startListening();
+        myRequestsList.setAdapter(mReqsRecyclerViewAdapter);
+
+    }
 }
+

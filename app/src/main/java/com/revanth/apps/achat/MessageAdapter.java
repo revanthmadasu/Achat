@@ -55,7 +55,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
             messageText = (TextView) view.findViewById(R.id.message_text_layout);
             profileImage = (CircleImageView) view.findViewById(R.id.message_profile_layout);
-            displayName = (TextView) view.findViewById(R.id.name_text_layout);
+            //displayName = (TextView) view.findViewById(R.id.name_text_layout);
             messageImage = (ImageView) view.findViewById(R.id.message_image_layout);
 
         }
@@ -88,7 +88,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 String name = dataSnapshot.child("name").getValue().toString();
                 String image = dataSnapshot.child("thumb_image").getValue().toString();
 
-                viewHolder.displayName.setText(name);
+                //viewHolder.displayName.setText(name);
 
                 Picasso.with(viewHolder.profileImage.getContext()).load(image)
                         .placeholder(R.drawable.default_avatar).into(viewHolder.profileImage);

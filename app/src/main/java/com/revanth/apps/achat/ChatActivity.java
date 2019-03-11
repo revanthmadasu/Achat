@@ -342,18 +342,14 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Log.d("dict","Temp1");
-
                     Intent Dict = new Intent(ChatActivity.this.getApplicationContext(), DictMainActivity.class);
                     startActivity(Dict);
-
                 }
             });*/
          /*  public void whatever(View v){
                     Log.d("dict","Temp1");
                     Intent Dict = new Intent(ChatActivity.this, DictMainActivity.class);
                     startActivity(Dict);
-
-
                 }*/
 
 
@@ -367,7 +363,7 @@ public class ChatActivity extends AppCompatActivity {
         try {
             startActivity(new Intent(ChatActivity.this, DictMainActivity.class));
         } catch (Exception e) {
-           e.printStackTrace();
+            e.printStackTrace();
         }
 
     }
