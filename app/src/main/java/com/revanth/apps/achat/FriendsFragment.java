@@ -208,7 +208,7 @@ public class FriendsFragment extends Fragment {
 
                                          //boolean changeRequired = false;
                                          // have some friends
-                                         if (!selectedCat.equals("")) {
+                                         if (!selectedCat.equals(" ")) {
                                              Log.d("revaa friendsfragment", "ids not empty x" + selectedCat + "x");
                                              selectedCatIds = Arrays.asList(selectedCat.split(";;;"));
                                              if (selectedCatIds.contains(list_user_id)) {

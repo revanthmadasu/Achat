@@ -28,6 +28,8 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
 
     private String mCurrentUsetId;
     private Spinner spinner;
+    private Button mDefaultbtn;
+    private TextInputEditText mDefaultMsg;
     private static final String[] paths = {"Friends", "Family","Both"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +48,17 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+        mDefaultbtn=(Button) findViewById(R.id.bot_default_button);
+        mDefaultMsg=(TextInputEditText) findViewById(R.id.bot_default_input);
+        mDefaultbtn.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                String dMessage=mDefaultMsg.getText().toString();
+                mCurrentUserDatabase.child("default_msg").setValue(dMessage);
+            }
+
+        });
 
         mCurrentUserDatabase=FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUsetId);
         addData.setOnClickListener(new View.OnClickListener() {

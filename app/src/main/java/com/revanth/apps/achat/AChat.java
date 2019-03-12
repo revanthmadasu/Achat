@@ -17,8 +17,8 @@ import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 public class AChat extends Application implements Application.ActivityLifecycleCallbacks{
-    private DatabaseReference mUserDatabase;
-    private FirebaseAuth mAuth;
+    public static DatabaseReference mUserDatabase;
+    public static FirebaseAuth mAuth;
     @Override
     public void onCreate() {
         super.onCreate();
