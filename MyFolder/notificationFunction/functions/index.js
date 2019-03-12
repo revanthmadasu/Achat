@@ -85,13 +85,32 @@ exports.sendmessageNotification=functions.database.ref('/MessageNotifications/{c
                 const messagesQuery=admin.database().ref(`Users/${current_user_id}/responses`).once('value')
                 const onlineQuery=admin.database().ref(`Users/${current_user_id}/online`).once('value')
                 const associationsQuery=admin.database().ref(`Users/${current_user_id}/associations`).once('value')
+                const familyCatQuery=admin.database().ref(`Users/${current_user_id}/family_cat`).once('value')
+                const friendsCatQuery=admin.database().ref(`Users/${current_user_id}/friends_cat`).once('value')
+
                 const lastMessageIdQuery=admin.database().ref(`Chat/${from_user_id}/${current_user_id}`).once('value')
-                return Promise.all([keysQuery,messagesQuery,onlineQuery,associationsQuery,lastMessageIdQuery]).then(result=>{
+                return Promise.all([keysQuery,messagesQuery,onlineQuery,associationsQuery,lastMessageIdQuery,familyCatQuery,friendsCatQuery]).then(result=>{
                     const userKeys=result[0].val()
                     const userResponses=result[1].val()
                     const online=result[2].val()
                     const userAssociations=result[3].val()
                     const lastMessageId=result[4].val().lastMessageId
+
+                    const friendsCatIds=result[5].val().split(";;;")
+                    const familyCatIds=result[6].val().split(";;;")
+                    
+                    var category=0
+                    for(const i in friendsCatIds)   
+                    {
+                        if(i===current_user_id)
+                            category=category+1
+                    }
+
+                    for(const i in familyCatIds)
+                    {
+                        if(i===current_user_id)
+                            category=category+2
+                    }
                     var messageDbRef_from=db.ref().child("messages/"+from_user_id+"/"+current_user_id)
                     var messageDbRef_current=db.ref().child("messages/"+current_user_id+"/"+from_user_id)
                     const lastMessageQuery=db.ref(`messages/${from_user_id}/${current_user_id}/${lastMessageId}`).once('value')
@@ -124,7 +143,7 @@ exports.sendmessageNotification=functions.database.ref('/MessageNotifications/{c
                             let keyResponsePair=individualPairs[pairIndex].split(":")
                             for(const keyIndex in matchedKeys)
                             {
-                                if(matchedKeys[keyIndex]===keyResponsePair[0])
+                                if(matchedKeys[keyIndex]===keyResponsePair[0]&&keyResponsePair[2]===category)
                                     matchedResponses.push(keyResponsePair[1])
                             }
                         }
@@ -134,6 +153,7 @@ exports.sendmessageNotification=functions.database.ref('/MessageNotifications/{c
                             generatedResponseMessage=generatedResponseMessage.concat(responsesInDbArray[matchedResponses[responseIndex]])
                         }
                         if(generatedResponseMessage==="")return
+                        generatedResponseMessage=generatedResponseMessage.concat("-auto reply");
                         messageDbRef_current.push().set(
                             {
                                 message:generatedResponseMessage,

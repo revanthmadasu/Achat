@@ -28,7 +28,7 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
 
     private String mCurrentUsetId;
     private Spinner spinner;
-    private static final String[] paths = {"Friends", "Family"};
+    private static final String[] paths = {"Friends", "Family","Both"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +88,7 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
                         messageMatchedIndex=responseMessagesInDbArray.length;
                         int newKeyIndex=keysInDbArray.length;
                         Log.d("revaa bot","newKeyIndex is"+newKeyIndex);
+                        int selectedCategoryPosition=spinner.getSelectedItemPosition()+1;
                         for(int i=0;i<keysInputArray.length;i++)
                         {
                             int matchedKeyIndex=-1;
@@ -97,14 +98,14 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
                                 {
                                     matchedKeyIndex=j;
                                     Log.d("revaa bot","key found in db matched index = "+matchedKeyIndex);
-                                    associations.append(";"+matchedKeyIndex+":"+messageMatchedIndex);
+                                    associations.append(";"+matchedKeyIndex+":"+messageMatchedIndex+":"+selectedCategoryPosition);
                                 }
                             }
                             if(matchedKeyIndex==-1)
                             {
                                 Log.d("revaa bot","key not found in db new index = "+newKeyIndex);
                                 keysInDb.append(","+keysInputArray[i]);
-                                associations.append(";"+newKeyIndex+":"+messageMatchedIndex);
+                                associations.append(";"+newKeyIndex+":"+messageMatchedIndex+":"+selectedCategoryPosition);
                                 ++newKeyIndex;
                             }
                         }

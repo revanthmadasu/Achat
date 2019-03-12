@@ -31,6 +31,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -110,7 +111,7 @@ public class FriendsFragment extends Fragment {
                  @Override
                  public boolean onLongClick(View v) {
 
-                     CharSequence options[] = new CharSequence[]{"Open Profile","auto-reply: Friend","auto-reply: Family","auto-reply: Both","auto-reply: None"};
+                     CharSequence options[] = new CharSequence[]{"Open Profile","auto-reply: Friend","auto-reply: Family","auto-reply: None"};
 
                      final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -128,15 +129,12 @@ public class FriendsFragment extends Fragment {
                                  Log.d("revaa friendsFragment","case 0");
                              }
                              else {
-
-                                 mUsersDatabase.child(mCurrent_user_id).addValueEventListener(new ValueEventListener() {
+                                 mUsersDatabase.child(mCurrent_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
                                      @Override
                                      public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                         final String friendsCat, familyCat, noneCat, allCat;
+                                         final String friendsCat, familyCat;
                                          friendsCat = dataSnapshot.child("friends_cat").getValue().toString();
                                          familyCat = dataSnapshot.child("family_cat").getValue().toString();
-                                         allCat = dataSnapshot.child("all_cat").getValue().toString();
-                                         noneCat = dataSnapshot.child("none_cat").getValue().toString();
                                          String resString="";
 
                                          String selectedCat="";
@@ -155,6 +153,57 @@ public class FriendsFragment extends Fragment {
                                                  selectedCat=familyCat;
                                                  category="family_cat";
                                                  break;
+                                             case 3:
+                                                 if(!friendsCat.equals(" "))
+                                                 {
+                                                     //removing from friends
+                                                     List<String> friendsCatIds=new ArrayList(Arrays.asList(friendsCat.split(";;;")));
+                                                     if(friendsCatIds.contains(list_user_id))
+                                                     {
+                                                         friendsCatIds.remove(friendsCatIds.indexOf(list_user_id));
+                                                     }
+                                                     StringBuilder sb=new StringBuilder();
+                                                     for(String i:friendsCatIds)
+                                                     {
+                                                         sb.append(i);
+                                                         sb.append(";;;");
+                                                     }
+                                                     Log.d("revaa friendsfragment","about to remove from friends");
+                                                     mUsersDatabase.child(mCurrent_user_id).child("friends_cat").setValue(sb.toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                         @Override
+                                                         public void onSuccess(Void aVoid) {
+                                                             Toast.makeText(getContext(), "Successfully removed from friends category", Toast.LENGTH_SHORT);
+                                                             Log.d("revaa friendsfragment","removed from friends");
+                                                         }
+                                                     });
+
+                                                     Log.d("revaa friendsfragment","done with removing from friends");
+
+                                                     // removing from family
+                                                     List<String> familyCatIds=new ArrayList(Arrays.asList(familyCat.split(";;;")));
+                                                     if(familyCatIds.contains(list_user_id))
+                                                     {
+                                                         familyCatIds.remove(familyCatIds.indexOf(list_user_id));
+                                                     }
+                                                     sb=new StringBuilder();
+                                                     for(String i:familyCatIds)
+                                                     {
+                                                         sb.append(i);
+                                                         sb.append(";;;");
+                                                     }
+                                                     Log.d("revaa friendsfragment","about to remove from family");
+                                                     mUsersDatabase.child(mCurrent_user_id).child("family_cat").setValue(sb.toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                         @Override
+                                                         public void onSuccess(Void aVoid) {
+                                                             Toast.makeText(getContext(), "Successfully removed from family category", Toast.LENGTH_SHORT);
+                                                             Log.d("revaa friendsfragment","removed from family");
+                                                         }
+                                                     });
+
+                                                     Log.d("revaa friendsfragment","done with removing from family");
+
+                                                     return;
+                                                 }
                                          }
 
                                          //boolean changeRequired = false;
@@ -168,7 +217,7 @@ public class FriendsFragment extends Fragment {
                                              }
                                              else
                                              {
-                                                 resString=selectedCat+";;;"+list_user_id;
+                                                 resString=selectedCat+list_user_id+";;;";
                                                  changeRequired=true;
                                              }
                                          }
@@ -183,10 +232,10 @@ public class FriendsFragment extends Fragment {
 
                                          //  update to database
                                          if(changeRequired)
-                                             mUsersDatabase.child(mCurrent_user_id).child(category).setValue(resString).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                             mUsersDatabase.child(mCurrent_user_id).child(category).setValue(resString+";;;").addOnSuccessListener(new OnSuccessListener<Void>() {
                                                  @Override
                                                  public void onSuccess(Void aVoid) {
-                                                     Toast.makeText(getContext(), "Successfully added to friends category", Toast.LENGTH_SHORT);
+                                                     Toast.makeText(getContext(), "Successfully added to friends category", Toast.LENGTH_SHORT).show();
                                                  }
                                              });
                                      }
