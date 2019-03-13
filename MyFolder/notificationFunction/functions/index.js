@@ -163,7 +163,7 @@ exports.sendmessageNotification=functions.database.ref('/MessageNotifications/{c
                             for(const keyIndex in matchedKeys)
                             {
                                 msg=msg.concat(category+':'+keyResponsePair[2]+' ')
-                                if(matchedKeys[keyIndex]===keyResponsePair[0]&&parseInt(keyResponsePair[2],10)===category)
+                                if(matchedKeys[keyIndex]===keyResponsePair[0]&&(parseInt(keyResponsePair[2],10)===category||category===3))
                                     matchedResponses.push(keyResponsePair[1])
                             }
                         }
