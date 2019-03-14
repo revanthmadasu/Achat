@@ -25,6 +25,8 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
     private Button addData;
     private DatabaseReference mCurrentUserDatabase;
     private FirebaseAuth mAuth;
+    private Button nDefaultbtn;
+    private TextInputEditText mDefaultInput;
 
     private String mCurrentUsetId;
     private Spinner spinner;
@@ -46,9 +48,21 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
-
-
         mCurrentUserDatabase=FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUsetId);
+        nDefaultbtn=(Button)findViewById(R.id.bot_default_button);
+        mDefaultInput=(TextInputEditText) findViewById(R.id.bot_default_input);
+        nDefaultbtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                String dMessage=mDefaultInput.getText().toString();
+                mCurrentUserDatabase.child("default_msg").setValue(dMessage);
+            }
+
+        });
+
+
+
         addData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,4 +156,6 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
+
 }
