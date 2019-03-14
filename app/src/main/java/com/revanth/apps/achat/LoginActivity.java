@@ -105,6 +105,10 @@ public class LoginActivity extends AppCompatActivity {
                     mLoginProgress.dismiss();
 
                     FirebaseUser user = mAuth.getCurrentUser();
+                    AChat.mAuth=FirebaseAuth.getInstance();
+                    AChat.mUserDatabase=FirebaseDatabase.getInstance().getReference().child("Users")
+                            .child(mAuth.getCurrentUser().getUid());
+
                     updateUI(user);
 
                     String current_user_id = mAuth.getCurrentUser().getUid();

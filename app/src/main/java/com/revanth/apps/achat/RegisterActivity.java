@@ -85,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity {
                     userMap.put("associations","0:0:2");
                     userMap.put("friends_cat"," ");
                     userMap.put("family_cat"," ");
-                    userMap.put("default_msg"," ");
+                    userMap.put("default_msg","hi sorry i'm not available right now.");
 
                     mDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override

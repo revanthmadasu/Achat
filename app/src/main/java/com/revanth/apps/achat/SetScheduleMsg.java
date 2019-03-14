@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +36,7 @@ public class SetScheduleMsg extends AppCompatActivity {
         {
             Log.d("revaa","Button is null");
         }
+
         mSetMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,6 +61,10 @@ public class SetScheduleMsg extends AppCompatActivity {
                             0
                     );
                 setAlarm(calendar.getTimeInMillis(),message);
+              /*  final AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+                builder.setMessage("Message Scheduled");
+                builder.show();*/
+                mMessageEditText.setText(" ");
             }
         });
     }
