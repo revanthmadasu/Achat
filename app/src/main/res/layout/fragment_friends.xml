@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.AppCompat.Light"
+    android:background="@android:color/white"
     tools:context=".FriendsFragment">
 
     <android.support.v7.widget.RecyclerView

@@ -1,11 +1,15 @@
 package com.revanth.apps.achat;
 
+import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,7 +29,7 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
     private Button addData;
     private DatabaseReference mCurrentUserDatabase;
     private FirebaseAuth mAuth;
-
+    private Toolbar mToolbar;
     private String mCurrentUsetId;
     private Spinner spinner;
     private Button mDefaultbtn;
@@ -40,8 +44,11 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
         keysInput=(TextInputEditText)findViewById(R.id.bot_keys_input);
         messageInput=(TextInputEditText)findViewById(R.id.bot_messages_input);
         addData=(Button)findViewById(R.id.bot_add_button);
-        Log.d("rev","Entered");
+        mToolbar=(Toolbar) findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("aChat - Add Automatic Replies");
         spinner = (Spinner)findViewById(R.id.spinner);
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(TrainBot.this,
                 android.R.layout.simple_spinner_item,paths);
 
@@ -61,6 +68,24 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
         });
 
         mCurrentUserDatabase=FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUsetId);
+        mDefaultbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+               mDefaultMsg.setText(" ");
+                AlertDialog alertDialog =  new AlertDialog.Builder(TrainBot.this).create();
+                alertDialog.setTitle("aChat Automatic Replies");
+                alertDialog.setMessage("Default Message has been set");
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+                                  }
+
+                                       });
         addData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +149,20 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
                         mCurrentUserDatabase.child("keys").setValue(keysInDb.toString());
                         mCurrentUserDatabase.child("responses").setValue(messagesInDb.toString());
                         mCurrentUserDatabase.child("associations").setValue(associations.toString());
+                        messageInput.setText(" ");
+                        keysInput.setText(" ");
+                        AlertDialog alertDialog = new AlertDialog.Builder(TrainBot.this).create();
+                        alertDialog.setTitle("aChat Automatic Replies");
+                        alertDialog.setMessage("Automatic Reply added successfully");
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+
+
                     }
 
                     @Override

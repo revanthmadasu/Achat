@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,6 +27,7 @@ public class DictMainActivity extends AppCompatActivity {
     ArrayList<String> meancombimelist;
     LinkedHashMap<String,String> namelist;
     SearchView searchView;
+    private Toolbar mToolBar;
 
 
     @Override
@@ -34,6 +36,9 @@ public class DictMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dict_main);
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
+        mToolBar=(Toolbar) findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setTitle("aChat Dictionary");
         db= new DatabaseHelper(this);
         searchView = (SearchView) findViewById(R.id.searchView);
         searchView.setQueryHint("Search Here");

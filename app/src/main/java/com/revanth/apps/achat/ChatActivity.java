@@ -47,6 +47,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+
 public class ChatActivity extends AppCompatActivity {
     private String mChatUser;
     private Toolbar mChatToolbar;
@@ -92,13 +93,13 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        Toolbar nToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(nToolbar);
 
-        mChatToolbar = (Toolbar) findViewById(R.id.chat_app_bar);
-        //setSupportActionBar(mChatToolbar);
+        ActionBar actionBar;
+        actionBar = getSupportActionBar();
+        getSupportActionBar().setTitle("");
 
-        ActionBar actionBar = getSupportActionBar();
-
-        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
@@ -107,6 +108,8 @@ public class ChatActivity extends AppCompatActivity {
         mCurrentUserId = mAuth.getCurrentUser().getUid();
 
         mChatUser = getIntent().getStringExtra("user_id");
+        if(mChatUser==null)
+        Log.d("SHr CA","mChat null");
         //String userName = mRootRef.child("Users").child(mChatUser).child("name").getKey();
         //Log.d("Rocky ChatActivity","username is "+userName);
 

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -34,7 +35,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="90dp"
         android:layout_marginTop="50dp"
-        android:text="User DefaultStatus" />
+        android:text="User DefaultStatus"
+        android:textColor="@android:color/black" />
 
     <ImageView
         android:id="@+id/user_single_online_icon"

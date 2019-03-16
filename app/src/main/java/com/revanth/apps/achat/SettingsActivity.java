@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -54,7 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private Button mStatusBtn;
     private Button mImageBtn;
-
+    private Toolbar nToolBar;
 
     private static final int GALLERY_PICK = 1;
 
@@ -77,6 +78,8 @@ public class SettingsActivity extends AppCompatActivity {
         mImageBtn = (Button) findViewById(R.id.settings_image_btn);
         mImageStorage = FirebaseStorage.getInstance().getReference();
 
+        nToolBar=(Toolbar) findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(nToolBar);
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         String current_uid = mCurrentUser.getUid();
@@ -93,7 +96,7 @@ public class SettingsActivity extends AppCompatActivity {
                 final String image = dataSnapshot.child("image").getValue().toString().trim();
                 String status = dataSnapshot.child("status").getValue().toString().trim();
                 String thumb_image = dataSnapshot.child("thumb_image").getValue().toString();
-
+                getSupportActionBar().setTitle(name);
                 mName.setText(name);
                 mStatus.setText(status);
                 if(!image.equals("default"))

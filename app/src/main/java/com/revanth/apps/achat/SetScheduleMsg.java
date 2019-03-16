@@ -10,6 +10,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,7 @@ public class SetScheduleMsg extends AppCompatActivity {
     private Button mSetMessageBtn;
     private TextInputEditText mMessageEditText;
     private String mReceiverId;
+    private Toolbar mToolBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +33,9 @@ public class SetScheduleMsg extends AppCompatActivity {
         mSetMessageBtn=(Button)findViewById(R.id.set_time_message_btn);
         mMessageEditText=(TextInputEditText)findViewById(R.id.schedule_msg_inputLayout);
         mReceiverId=getIntent().getStringExtra("receiverId");
-
+        mToolBar=(Toolbar) findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setTitle("aChat - Schedule Message");
         if(mSetMessageBtn==null)
         {
             Log.d("revaa","Button is null");

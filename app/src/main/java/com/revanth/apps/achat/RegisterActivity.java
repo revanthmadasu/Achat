@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -29,7 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private ProgressDialog mRegProgress;
-
+    private Toolbar nToolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +40,14 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mRegProgress = new ProgressDialog(this);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Create an Account");
+        nToolBar=(Toolbar) findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(nToolBar);
         nDisplayName= (TextInputLayout) findViewById(R.id.textInputLayout4);
         nEmail= (TextInputLayout) findViewById(R.id.textInputLayout6);
         nPassword= (TextInputLayout) findViewById(R.id.textInputLayout7);
         nCreateBtn= (Button) findViewById(R.id.reg_create_btn);
+
+        getSupportActionBar().setTitle("CREATE A NEW ACCOUNT");
 
         nCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override

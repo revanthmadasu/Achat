@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:theme="@style/Theme.AppCompat.Light"
+    android:background="@android:color/white"
     android:padding="10dp">
 
     <LinearLayout
@@ -41,6 +43,7 @@
                 android:padding="5dp"
                 android:text="display user status"
 
+                android:textColor="@android:color/black"
                 android:textSize="14sp" />
 
             <LinearLayout

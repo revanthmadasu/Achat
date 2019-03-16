@@ -45,10 +45,10 @@ public class StatusActivity extends AppCompatActivity {
 
         mStatusDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
 
-       // mToolbar = (Toolbar) findViewById(R.id.status_appBar);
-        //setSupportActionBar(mToolbar);
-        //getSupportActionBar().setTitle("Account Status");
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+         mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("Account Status");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         String status_value = getIntent().getStringExtra("status_value");

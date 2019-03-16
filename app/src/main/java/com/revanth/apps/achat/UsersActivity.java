@@ -42,7 +42,9 @@ public class UsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
 
-
+        mToolbar=(Toolbar) findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("aChat - All Users");
         mUsersDatabase=FirebaseDatabase.getInstance().getReference().child("Users");
 
 

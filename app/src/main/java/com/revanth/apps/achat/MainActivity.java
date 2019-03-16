@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private TabLayout mTabLayout;
 
-    //private Toolbar nToolbar;
+    private Toolbar nToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -44,11 +45,13 @@ public class MainActivity extends AppCompatActivity {
 
        mTabLayout = (TabLayout) findViewById(R.id.main_tabs);
         mTabLayout.setupWithViewPager(mViewPager);
+        nToolbar=(Toolbar) findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(nToolbar);
+        getSupportActionBar().setTitle("aChat");
 
 
-        //nToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
-       //setSupportActionBar(nToolbar);
-      // getSupportActionBar().setTitle("AChat");
+
+
     }
     @Override
     public void onStart() {
