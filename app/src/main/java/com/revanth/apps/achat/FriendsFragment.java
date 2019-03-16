@@ -111,7 +111,7 @@ public class FriendsFragment extends Fragment {
                  @Override
                  public boolean onLongClick(View v) {
 
-                     CharSequence options[] = new CharSequence[]{"Open Profile","auto-reply: Friend","auto-reply: Family","auto-reply: None"};
+                     CharSequence options[] = new CharSequence[]{"Open Profile","auto-reply: Friend","auto-reply: Family","auto-reply: Both","auto-reply: None"};
 
                      final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
@@ -142,82 +142,45 @@ public class FriendsFragment extends Fragment {
                                          String category="";
 
                                          int count = 0;
-                                         Log.d("revaa friendsfragment", "called " + i);
                                          boolean changeRequired=false;
+                                         boolean case3=false;
                                          switch (i) {
                                              case 1:
-                                                 selectedCat=friendsCat;
-                                                 category="friends_cat";
-                                                 break;
+                                                 insertIntoCategory(friendsCat,"friends_cat");
+                                                 return;
                                              case 2:
-                                                 selectedCat=familyCat;
-                                                 category="family_cat";
-                                                 break;
+                                                 insertIntoCategory(familyCat,"family_cat");
+                                                 return;
                                              case 3:
-                                                 if(!friendsCat.equals(" "))
-                                                 {
-                                                     //removing from friends
-                                                     List<String> friendsCatIds=new ArrayList(Arrays.asList(friendsCat.split(";;;")));
-                                                     if(friendsCatIds.contains(list_user_id))
-                                                     {
-                                                         friendsCatIds.remove(friendsCatIds.indexOf(list_user_id));
-                                                     }
-                                                     StringBuilder sb=new StringBuilder();
-                                                     for(String i:friendsCatIds)
-                                                     {
-                                                         sb.append(i);
-                                                         sb.append(";;;");
-                                                     }
-                                                     Log.d("revaa friendsfragment","about to remove from friends");
-                                                     mUsersDatabase.child(mCurrent_user_id).child("friends_cat").setValue(sb.toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                         @Override
-                                                         public void onSuccess(Void aVoid) {
-                                                             Toast.makeText(getContext(), "Successfully removed from friends category", Toast.LENGTH_SHORT);
-                                                             Log.d("revaa friendsfragment","removed from friends");
-                                                         }
-                                                     });
-
-                                                     Log.d("revaa friendsfragment","done with removing from friends");
-
-                                                     // removing from family
-                                                     List<String> familyCatIds=new ArrayList(Arrays.asList(familyCat.split(";;;")));
-                                                     if(familyCatIds.contains(list_user_id))
-                                                     {
-                                                         familyCatIds.remove(familyCatIds.indexOf(list_user_id));
-                                                     }
-                                                     sb=new StringBuilder();
-                                                     for(String i:familyCatIds)
-                                                     {
-                                                         sb.append(i);
-                                                         sb.append(";;;");
-                                                     }
-                                                     Log.d("revaa friendsfragment","about to remove from family");
-                                                     mUsersDatabase.child(mCurrent_user_id).child("family_cat").setValue(sb.toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                         @Override
-                                                         public void onSuccess(Void aVoid) {
-                                                             Toast.makeText(getContext(), "Successfully removed from family category", Toast.LENGTH_SHORT);
-                                                             Log.d("revaa friendsfragment","removed from family");
-                                                         }
-                                                     });
-
-                                                     Log.d("revaa friendsfragment","done with removing from family");
-
-                                                     return;
-                                                 }
+                                                 insertIntoCategory(familyCat,"family_cat");
+                                                 insertIntoCategory(friendsCat,"friends_cat");
+                                                 return;
+                                             case 4:
+                                                 removeFromCategory(friendsCat,"friends_cat");
+                                                 removeFromCategory(familyCat,"family_cat");
+                                                 return;
                                          }
+                                     }
 
-                                         //boolean changeRequired = false;
+                                     @Override
+                                     public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                     }
+
+                                     public void insertIntoCategory(String selectedCat,String category)
+                                     {
+                                         boolean changeRequired=false;
+                                         String resString="";
+                                         List selectedCatIds;
                                          // have some friends
-                                         if (!selectedCat.equals(" ")) {
-                                             Log.d("revaa friendsfragment", "ids not empty x" + selectedCat + "x");
+                                         if (!selectedCat.equals("")) {
                                              selectedCatIds = Arrays.asList(selectedCat.split(";;;"));
                                              if (selectedCatIds.contains(list_user_id)) {
-                                                 Log.d("revaa friendsfragment", "id already there in freinds");
                                                  Toast.makeText(getContext(),"Already exists in category",Toast.LENGTH_SHORT);
                                              }
                                              else
                                              {
-                                                 resString=selectedCat+list_user_id+";;;";
+                                                 resString=selectedCat+list_user_id;
                                                  changeRequired=true;
                                              }
                                          }
@@ -225,7 +188,6 @@ public class FriendsFragment extends Fragment {
                                          // no friends
                                          else
                                          {
-                                             Log.d("revaa friendsfragment", "id not there in friends.have to add. list id = " + list_user_id);
                                              resString=list_user_id;
                                              changeRequired=true;
                                          }
@@ -238,10 +200,36 @@ public class FriendsFragment extends Fragment {
                                                      Toast.makeText(getContext(), "Successfully added to friends category", Toast.LENGTH_SHORT).show();
                                                  }
                                              });
-                                     }
 
-                                     @Override
-                                     public void onCancelled(@NonNull DatabaseError databaseError) {
+                                     }
+                                     public void removeFromCategory(String selectedCat, final String category)
+                                     {
+
+                                         List<String> selectedCatIds=new ArrayList(Arrays.asList(selectedCat.split(";;;")));
+                                         Log.d("revaa friendsfragment","Received "+selectedCat+" Selected : "+selectedCatIds.toString());
+                                         if(selectedCatIds.contains(list_user_id))
+                                         {
+                                             int index=selectedCatIds.indexOf(list_user_id);
+                                             Log.d("revaa friendsfragment","Removing index = "+index);
+                                             selectedCatIds.remove(index);
+                                             Log.d("revaa friendsfragment","size after removing : "+selectedCatIds.size());
+                                             StringBuilder sb=new StringBuilder();
+                                             for(String i:selectedCatIds)
+                                             {
+                                                 sb.append(i);
+                                                 sb.append(";;;");
+                                             }
+                                             //Log.d("revaa friendsfragment","about to remove from friends");
+                                             mUsersDatabase.child(mCurrent_user_id).child(category).setValue(sb.toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                 @Override
+                                                 public void onSuccess(Void aVoid) {
+                                                     Toast.makeText(getContext(), "Successfully removed from "+category+" category", Toast.LENGTH_SHORT);
+                                                     Log.d("revaa friendsfragment","removed from "+category);
+                                                 }
+                                             });
+
+                                             Log.d("revaa friendsfragment","done with removing from "+category);
+                                         }
 
                                      }
                                  });

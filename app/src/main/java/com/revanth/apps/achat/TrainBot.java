@@ -106,7 +106,7 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
                             int matchedKeyIndex=-1;
                             for(int j=0;j<keysInDbArray.length;++j)
                             {
-                                if(keysInputArray[i].equalsIgnoreCase(keysInDbArray[j]))
+                                if(keysInputArray[i].trim().equalsIgnoreCase(keysInDbArray[j]))
                                 {
                                     matchedKeyIndex=j;
                                     Log.d("revaa bot","key found in db matched index = "+matchedKeyIndex);
