@@ -13,7 +13,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="58dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="23dp"
         android:layout_marginEnd="47dp"
         android:layout_marginBottom="131dp"
         android:orientation="vertical"
@@ -69,11 +69,11 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
 
-        android:layout_marginStart="31dp"
-        android:layout_marginTop="180dp"
-        android:layout_marginEnd="38dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="202dp"
+        android:layout_marginEnd="31dp"
 
-        android:layout_marginBottom="57dp"
+        android:layout_marginBottom="35dp"
         android:orientation="vertical"
         android:theme="@style/Base.Theme.AppCompat.Light.Dialog.Alert"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -125,7 +125,7 @@
                 android:layout_width="365dp"
                 android:layout_height="wrap_content"
                 android:hint="Add response message"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
 
         </android.support.design.widget.TextInputLayout>

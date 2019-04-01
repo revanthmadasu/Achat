@@ -83,8 +83,8 @@ public class RegisterActivity extends AppCompatActivity {
                     userMap.put("keys","name");
                     userMap.put("responses","You can call me"+display_name);
                     userMap.put("associations","0:0:2");
-                    userMap.put("friends_cat","");
-                    userMap.put("family_cat","");
+                    userMap.put("friends_cat"," ");
+                    userMap.put("family_cat"," ");
 
                     mDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override

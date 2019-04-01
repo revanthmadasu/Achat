@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:theme="@style/Theme.AppCompat.Light"
+    android:background="@android:color/white"
     android:padding="10dp">
 
     <LinearLayout
@@ -41,6 +43,7 @@
                 android:padding="5dp"
                 android:text="display user status"
 
+                android:textColor="@android:color/black"
                 android:textSize="14sp" />
 
             <LinearLayout
@@ -63,7 +66,7 @@
                     android:layout_height="40dp"
                     android:layout_marginLeft="5dp"
                     android:background="@android:color/holo_red_dark"
-                    android:text="Cancel"
+                    android:text="Reject"
                     android:textSize="16sp" />
 
 

@@ -99,84 +99,121 @@ public class RequestsFragment extends Fragment {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull final RequestViewHolder holder, int position, @NonNull Requests model) {
+            protected void onBindViewHolder(@NonNull final RequestViewHolder holder, int position, @NonNull final Requests model) {
                 final String list_user_id=getRef(position).getKey();
 
                 mUsersDatabase.child(list_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        Log.d("revaa requestsfragment",dataSnapshot.toString());
+                        String requestType=model.getRequest_type();
                         String userName=dataSnapshot.child("name").getValue().toString();
                         String thumb_image=dataSnapshot.child("thumb_image").getValue().toString();
                         String status=dataSnapshot.child("status").getValue().toString();
+
+                        Log.d("revaa requestsfragment","request type: "+requestType);
 
                         holder.setThumb_user_image(thumb_image,getContext());
                         holder.setUser_Status(status);
                         holder.setUserName(userName);
 
-                        holder.mView.findViewById(R.id.request_accept_btn).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                final String currentDate= DateFormat.getDateTimeInstance().format(new Date());
-                                mFriendDatabase.child(mCurrentUserId).child(list_user_id).child("date").setValue(currentDate)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                mFriendDatabase.child(list_user_id).child(mCurrentUserId).child("date").setValue(currentDate)
-                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void aVoid) {
-                                                                mAllFriendRequestsDatabase.child(mCurrentUserId).child(list_user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(Void aVoid) {
-                                                                        mAllFriendRequestsDatabase.child(list_user_id).child(mCurrentUserId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                            @Override
-                                                                            public void onSuccess(Void aVoid) {
+                        if(!requestType.equals("sent")) {
+                            holder.mView.findViewById(R.id.request_accept_btn).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    final String currentDate = DateFormat.getDateTimeInstance().format(new Date());
+                                    mFriendDatabase.child(mCurrentUserId).child(list_user_id).child("date").setValue(currentDate)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    mFriendDatabase.child(list_user_id).child(mCurrentUserId).child("date").setValue(currentDate)
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    mAllFriendRequestsDatabase.child(mCurrentUserId).child(list_user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                        @Override
+                                                                        public void onSuccess(Void aVoid) {
+                                                                            mAllFriendRequestsDatabase.child(list_user_id).child(mCurrentUserId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                @Override
+                                                                                public void onSuccess(Void aVoid) {
 
-                                                                                Button mProfileSendReqBtn=(Button)mProfileView.findViewById(R.id.profile_send_req_btn);
-                                                                                mProfileSendReqBtn.setEnabled(true);
-                                                                                mProfileSendReqBtn.setText("Unfriend");
+                                                                                    Button mProfileSendReqBtn = (Button) mProfileView.findViewById(R.id.profile_send_req_btn);
+                                                                                    mProfileSendReqBtn.setEnabled(true);
+                                                                                    mProfileSendReqBtn.setText("Unfriend");
 
-                                                                                Button mDeclineButton=(Button)mProfileView.findViewById(R.id.profile_decline_btn);
-                                                                                mDeclineButton.setVisibility(View.INVISIBLE);
-                                                                                mDeclineButton.setEnabled(false);
+                                                                                    Button mDeclineButton = (Button) mProfileView.findViewById(R.id.profile_decline_btn);
+                                                                                    mDeclineButton.setVisibility(View.INVISIBLE);
+                                                                                    mDeclineButton.setEnabled(false);
 
-                                                                                Toast.makeText(getContext(),"Successfully added friend",Toast.LENGTH_SHORT).show();
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                });
-                                                            }
-                                                        });
-                                            }
-                                        });
-                            }
-                        });
+                                                                                    Toast.makeText(getContext(), "Successfully added friend", Toast.LENGTH_SHORT).show();
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                }
+                                                            });
+                                                }
+                                            });
+                                }
+                            });
 
-                        holder.mView.findViewById(R.id.request_decline_btn).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mAllFriendRequestsDatabase.child(mCurrentUserId).child(list_user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        mAllFriendRequestsDatabase.child(list_user_id).child(mCurrentUserId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
+                            holder.mView.findViewById(R.id.request_decline_btn).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mAllFriendRequestsDatabase.child(mCurrentUserId).child(list_user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            mAllFriendRequestsDatabase.child(list_user_id).child(mCurrentUserId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
 
-                                                Button mProfileSendReqBtn=(Button)mProfileView.findViewById(R.id.profile_send_req_btn);
-                                                mProfileSendReqBtn.setEnabled(true);
-                                                mProfileSendReqBtn.setText("Send Friend Request");
+                                                    Button mProfileSendReqBtn = (Button) mProfileView.findViewById(R.id.profile_send_req_btn);
+                                                    mProfileSendReqBtn.setEnabled(true);
+                                                    mProfileSendReqBtn.setText("Send Friend Request");
 
-                                                Button mDeclineButton=(Button)mProfileView.findViewById(R.id.profile_decline_btn);
-                                                mDeclineButton.setVisibility(View.INVISIBLE);
-                                                mDeclineButton.setEnabled(false);
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        });
+                                                    Button mDeclineButton = (Button) mProfileView.findViewById(R.id.profile_decline_btn);
+                                                    mDeclineButton.setVisibility(View.INVISIBLE);
+                                                    mDeclineButton.setEnabled(false);
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                        else
+                        {
+                            Button acceptButton=holder.mView.findViewById(R.id.request_accept_btn);
+                            acceptButton.setVisibility(View.INVISIBLE);
+                            acceptButton.setEnabled(false);
+
+                            Button cancelButton=holder.mView.findViewById(R.id.request_decline_btn);
+                            cancelButton.setText("Cancel");
+                            cancelButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mAllFriendRequestsDatabase.child(mCurrentUserId).child(list_user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            mAllFriendRequestsDatabase.child(list_user_id).child(mCurrentUserId).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+
+                                                    Button mProfileSendReqBtn = (Button) mProfileView.findViewById(R.id.profile_send_req_btn);
+                                                    mProfileSendReqBtn.setEnabled(true);
+                                                    mProfileSendReqBtn.setText("Send Friend Request");
+
+                                                    Button mDeclineButton = (Button) mProfileView.findViewById(R.id.profile_decline_btn);
+                                                    mDeclineButton.setVisibility(View.INVISIBLE);
+                                                    mDeclineButton.setEnabled(false);
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+
+                        }
                     }
 
                     @Override
