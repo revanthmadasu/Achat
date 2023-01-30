@@ -3,11 +3,17 @@ package com.revanth.apps.achat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+import com.google.android.material.textfield.TextInputLayout;
+//import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,11 +41,12 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        Toolbar myToolBar = (Toolbar) findViewById(R.id.main_app_bar);
+        setSupportActionBar(myToolBar);
         mAuth = FirebaseAuth.getInstance();
         mRegProgress = new ProgressDialog(this);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Create an Account");
+//        getSupportActionBar().setTitle("Create an Account");
         nDisplayName= (TextInputLayout) findViewById(R.id.textInputLayout4);
         nEmail= (TextInputLayout) findViewById(R.id.textInputLayout6);
         nPassword= (TextInputLayout) findViewById(R.id.textInputLayout7);
@@ -114,6 +121,5 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
-
     }
 }
