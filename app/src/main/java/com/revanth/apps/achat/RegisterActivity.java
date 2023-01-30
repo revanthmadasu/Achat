@@ -42,12 +42,11 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         Toolbar myToolBar = (Toolbar) findViewById(R.id.main_app_bar);
-        Log.d("toolbar", myToolBar.toString());
         setSupportActionBar(myToolBar);
         mAuth = FirebaseAuth.getInstance();
         mRegProgress = new ProgressDialog(this);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Create an Account");
+//        getSupportActionBar().setTitle("Create an Account");
         nDisplayName= (TextInputLayout) findViewById(R.id.textInputLayout4);
         nEmail= (TextInputLayout) findViewById(R.id.textInputLayout6);
         nPassword= (TextInputLayout) findViewById(R.id.textInputLayout7);
