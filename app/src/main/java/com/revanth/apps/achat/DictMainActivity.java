@@ -2,19 +2,26 @@ package com.revanth.apps.achat;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+//import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+//import android.support.v7.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+//import android.support.v7.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+//import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
+//import android.support.v7.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
+//import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static android.support.v7.widget.RecyclerView.*;
+//import static android.support.v7.widget.RecyclerView.*;
+import androidx.recyclerview.widget.RecyclerView.*;
 
 public class DictMainActivity extends AppCompatActivity {
 

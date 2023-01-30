@@ -12,13 +12,15 @@
         android:id="@+id/main_page_toolbar"
         layout="@layout/app_bar_layout" />
 
-    <android.support.v7.widget.SearchView
+<!--    <android.support.v7.widget.SearchView-->
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/main_page_toolbar"/>
 
-    <android.support.v7.widget.RecyclerView
+<!--    <android.support.v7.widget.RecyclerView-->
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

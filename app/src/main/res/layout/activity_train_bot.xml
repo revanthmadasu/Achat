@@ -19,7 +19,8 @@
         android:orientation="vertical"
         android:theme="@style/Base.Theme.AppCompat.Light.Dialog.Alert">
 
-        <android.support.design.widget.TextInputLayout
+<!--        <android.support.design.widget.TextInputLayout-->
+        <com.google.android.material.textfield.TextInputLayout
 
             android:layout_width="360dp"
             android:layout_height="wrap_content"
@@ -35,13 +36,15 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.273">
 
-            <android.support.design.widget.TextInputEditText
+<!--            <android.support.design.widget.TextInputEditText-->
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/bot_default_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Add Default Message"
                 android:textColor="@color/colorPrimaryDark" />
-        </android.support.design.widget.TextInputLayout>
+<!--        </android.support.design.widget.TextInputLayout>-->
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/bot_default_button"
@@ -82,7 +85,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.726">
 
-        <android.support.design.widget.TextInputLayout
+<!--        <android.support.design.widget.TextInputLayout-->
+        <com.google.android.material.textfield.TextInputLayout
 
             android:layout_width="360dp"
             android:layout_height="wrap_content"
@@ -98,15 +102,18 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.273">
 
-            <android.support.design.widget.TextInputEditText
+<!--            <android.support.design.widget.TextInputEditText-->
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/bot_keys_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Add keys"
                 android:textColor="@color/colorPrimaryDark" />
-        </android.support.design.widget.TextInputLayout>
+<!--        </android.support.design.widget.TextInputLayout>-->
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+<!--        <android.support.design.widget.TextInputLayout-->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="376dp"
             android:layout_height="wrap_content"
 
@@ -120,7 +127,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.498">
 
-            <android.support.design.widget.TextInputEditText
+<!--            <android.support.design.widget.TextInputEditText-->
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/bot_messages_input"
                 android:layout_width="365dp"
                 android:layout_height="wrap_content"
@@ -128,7 +136,8 @@
                 android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
 
-        </android.support.design.widget.TextInputLayout>
+<!--        </android.support.design.widget.TextInputLayout>-->
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Spinner
             android:id="@+id/spinner"

@@ -3,7 +3,8 @@ package com.revanth.apps.achat;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+//import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;

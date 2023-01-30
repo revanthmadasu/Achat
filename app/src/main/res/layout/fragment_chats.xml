@@ -7,11 +7,13 @@
     tools:context=".ChatsFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <android.support.v7.widget.RecyclerView
+<!--    <android.support.v7.widget.RecyclerView-->
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/conv_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true">
 
-    </android.support.v7.widget.RecyclerView>
+<!--    </android.support.v7.widget.RecyclerView>-->
+    </androidx.recyclerview.widget.RecyclerView>
 </RelativeLayout>

@@ -1,9 +1,12 @@
 package com.revanth.apps.achat;
 
 import android.app.ProgressDialog;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
+//import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
+//import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
