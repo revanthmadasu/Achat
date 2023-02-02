@@ -52,7 +52,7 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
         addData=(Button)findViewById(R.id.bot_add_button);
         mToolbar=(Toolbar) findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("aChat - Add Automatic Replies");
+//        getSupportActionBar().setTitle("aChat - Add Automatic Replies");
         spinner = (Spinner)findViewById(R.id.spinner);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(TrainBot.this,
