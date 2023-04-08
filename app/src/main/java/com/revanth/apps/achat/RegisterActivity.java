@@ -98,7 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
 
                             if(task.isSuccessful()){
-
+                                Toast.makeText(RegisterActivity.this,"Successfully created account",Toast.LENGTH_SHORT).show();
                                 mRegProgress.dismiss();
 
                                 Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
