@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if(task.isSuccessful()){
 
-                    Toast.makeText(LoginActivity.this,"Task is successful",Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this,"Successfully logged In",Toast.LENGTH_LONG).show();
                     mLoginProgress.dismiss();
 
                     FirebaseUser user = mAuth.getCurrentUser();
@@ -138,10 +138,10 @@ public class LoginActivity extends AppCompatActivity {
 
                     mLoginProgress.hide();
 
-                    String task_result = task.getException().toString();
+                    String task_result = task.getException().getMessage();
 
                     Toast.makeText(LoginActivity.this, "Error : " + task_result, Toast.LENGTH_LONG).show();
-                    Toast.makeText(LoginActivity.this,"password is "+password, Toast.LENGTH_LONG).show();
+//                    Toast.makeText(LoginActivity.this,"password is "+password, Toast.LENGTH_LONG).show();
                 }
 
             }
