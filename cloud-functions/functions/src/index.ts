@@ -1,6 +1,4 @@
-import { initializeApp } from "firebase-admin/app";
 import { onMessageSent } from "./MessageListener";
-initializeApp();
 
 export { onMessageSent }
 // // Start writing Firebase Functions
