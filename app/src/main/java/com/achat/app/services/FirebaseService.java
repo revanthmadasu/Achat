@@ -6,9 +6,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class FirebaseService {
     private static FirebaseService firebaseServices;
-    public DatabaseReference userDatabase;
+
     public FirebaseDatabase firebaseDatabase;
     public FirebaseAuth authentication;
+
+    public DatabaseReference currentUserDatabase;
+    public DatabaseReference messageNotificationsDB;
+
     private FirebaseService() {
         this.getAuthentication();
         this.getFirebaseDatabase();
@@ -28,13 +32,38 @@ public class FirebaseService {
         return FirebaseService.firebaseServices.authentication;
     }
 
-    public DatabaseReference getUserDatabase(boolean force) {
-        if (!Utils.isTruthy(this.userDatabase) || force) {
-            this.userDatabase = this.getFirebaseDatabase().getReference()
+    public DatabaseReference getCurrentUserDatabase(boolean force) {
+        if (!Utils.isTruthy(this.currentUserDatabase) || force) {
+            this.currentUserDatabase = this.getFirebaseDatabase().getReference()
                     .child("Users")
                     .child(this.authentication.getCurrentUser().getUid());
         }
-        return this.userDatabase;
+        return this.currentUserDatabase;
+    }
+
+    public DatabaseReference getUserDatabaseRef(String userId) {
+        return this.firebaseDatabase.getReference()
+                .child("Users")
+                .child(userId);
+    }
+
+    public DatabaseReference getRootRef() {
+        return this.firebaseDatabase.getReference();
+    }
+
+    public DatabaseReference getMessageNotificationsDB(boolean force) {
+        if (!Utils.isTruthy(this.messageNotificationsDB) || force) {
+            this.messageNotificationsDB = this.getFirebaseDatabase().getReference()
+                    .child("MessageNotifications");
+        }
+        return this.messageNotificationsDB;
+    }
+
+    public DatabaseReference getMessagesDbRef(String userId1, String userId2) {
+        return this.firebaseDatabase.getReference()
+                .child("messages")
+                .child(userId1)
+                .child(userId2);
     }
 
     private FirebaseAuth getAuthentication() {

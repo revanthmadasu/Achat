@@ -9,13 +9,11 @@ import com.achat.app.services.FirebaseService;
 import com.achat.app.services.UserService;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 public class AChat extends Application implements Application.ActivityLifecycleCallbacks{
-    public static DatabaseReference mUserDatabase;
     public static FirebaseAuth mAuth;
     public UserService userService;
     public FirebaseService fbService;

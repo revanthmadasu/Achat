@@ -12,6 +12,7 @@ import com.achat.app.services.UserService;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -102,21 +103,20 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this,"Successfully logged In",Toast.LENGTH_LONG).show();
                     mLoginProgress.dismiss();
 
-                    FirebaseUser user = userService.getCurrentUser();
-                    mUserDatabase = fbService.getUserDatabase(true);
+                    FirebaseUser user = userService.getCurrentUser(true);
+                    mUserDatabase = fbService.getCurrentUserDatabase(true);
                     fbService.getAuthentication(true);
 
                     updateUI(user);
 
-                    String current_user_id = user.getUid();
                     String deviceToken = FirebaseInstanceId.getInstance().getToken();//getToken() is depreciated method. have to work on it
 
-                    mUserDatabase.child(current_user_id).child("device_token").setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    mUserDatabase.child("device_token").setValue(deviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Intent mainIntent=new Intent(LoginActivity.this,MainActivity.class);
                             mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            Toast.makeText(LoginActivity.this,"Successfully added token",Toast.LENGTH_LONG).show();
+                            Log.d("Login Activity", "Successfully added device token");
                             startActivity(mainIntent);
                             finish();
                         }

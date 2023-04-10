@@ -7,9 +7,12 @@ import com.google.firebase.database.ServerValue;
 public class UserService {
     public static UserService userService;
     public FirebaseService fbService;
+
+    private FirebaseUser currentUser;
+    public String uid;
     private UserService() {
         this.fbService = FirebaseService.getInstance();
-        this.fbService.authentication.signOut();
+        this.getCurrentUser(true);
     }
 
     public static UserService getInstance() {
@@ -23,17 +26,22 @@ public class UserService {
         if (this.isUserLoggedIn()) {
             this.goOffline();
             this.fbService.authentication.signOut();
+            this.getCurrentUser(true);
         }
     }
 
     public void goOffline() {
         if (this.isUserLoggedIn()) {
-            this.fbService.userDatabase.child("online").setValue(ServerValue.TIMESTAMP);
+            this.fbService.currentUserDatabase.child("online").setValue(ServerValue.TIMESTAMP);
         }
     }
 
-    public FirebaseUser getCurrentUser() {
-        return this.fbService.authentication.getCurrentUser();
+    public FirebaseUser getCurrentUser(boolean force) {
+        if (!Utils.isTruthy(this.currentUser) || force) {
+            this.currentUser = this.fbService.authentication.getCurrentUser();
+            this.uid = this.currentUser.getUid();
+        }
+        return this.currentUser;
     }
 
     public boolean isUserLoggedIn() {
@@ -42,7 +50,7 @@ public class UserService {
 
     public void goOnline() {
         if (this.isUserLoggedIn()) {
-            this.fbService.userDatabase.child("online").setValue(true);
+            this.fbService.getCurrentUserDatabase(true).child("online").setValue(true);
         }
     }
 }
