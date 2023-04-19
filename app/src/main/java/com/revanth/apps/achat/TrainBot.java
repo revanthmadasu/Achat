@@ -1,36 +1,28 @@
 package com.revanth.apps.achat;
 
 import android.content.DialogInterface;
-//import android.support.annotation.NonNull;
 import androidx.annotation.NonNull;
-//import android.support.design.widget.TextInputEditText;
 
 import com.achat.app.services.FirebaseService;
 import com.google.android.material.textfield.TextInputEditText;
-//import android.support.v7.app.AlertDialog;
-//import android.support.v7.app.AppCompatActivity;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-//import android.support.v7.widget.Toolbar;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Arrays;
+import java.util.HashMap;
 
 public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private TextInputEditText keysInput;
@@ -43,6 +35,7 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
     private Button mDefaultbtn;
     private TextInputEditText mDefaultMsg;
     private static final String[] paths = {"Friends", "Family","Both"};
+    private String selectedCategory;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,18 +84,12 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
             }
         });
 
-        String[] inputKeys=keysInput.getText().toString().split(",");
-        String responseInputMessage=messageInput.getText().toString();
-        for (String key: inputKeys) {
-
-        }
         addData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mCurrentUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                         StringBuilder keysInDb=new StringBuilder(dataSnapshot.child("keys").getValue().toString());
                         StringBuilder messagesInDb=new StringBuilder(dataSnapshot.child("responses").getValue().toString());
                         StringBuilder associations=new StringBuilder(dataSnapshot.child("associations").getValue().toString());
@@ -110,8 +97,33 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
                         String[] keysInDbArray=keysInDb.toString().split(",");
                         String[] responseMessagesInDbArray=messagesInDb.toString().split(";;;");
 
+                        // binding input values
                         String keysInputString=keysInput.getText().toString();
                         String responseInputMessage=messageInput.getText().toString();
+
+                        fbService.getAutoreplyDataRef().addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                HashMap<String, HashMap<String, String>> keyMessagesMap = (HashMap<String, HashMap<String, String>>) dataSnapshot.getValue();
+                                String[] allKeys = keysInputString.split(",");
+                                keyMessagesMap.put(selectedCategory, new HashMap<String, String>());
+                                for (String key: allKeys) {
+                                    String trimmed_key = key.trim().toLowerCase();
+                                    keyMessagesMap.get(selectedCategory).put(trimmed_key, responseInputMessage);
+                                }
+                                // ToDo - add onComplete Listener
+                                fbService.updateTrainData(keyMessagesMap);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Log.e("TrainBot", "Fetch autoreply data failed");
+                            }
+                        });
+                        // populating hashmap
+                        HashMap<String, HashMap<String, String>> keyMessagesMap = new HashMap<String, HashMap<String, String>>();
+
+                        fbService.updateTrainData(keyMessagesMap);
 
                         Log.d("TrainBot: keys = ",keysInDbArray.toString());
                         Log.d("TrainBot: responses = ",messagesInDb.toString());
@@ -171,18 +183,12 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
                                     }
                                 });
                         alertDialog.show();
-
-
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
                     }
                 });
-
-
-
             }
         });
     }
@@ -191,12 +197,17 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         switch (i) {
             case 0:
+                this.selectedCategory = "friends";
                 break;
             case 1:
+                this.selectedCategory = "family";
                 break;
-
+            case 2:
+                this.selectedCategory = "both";
+                break;
+            default:
+                this.selectedCategory = "unknown";
         }
-
     }
 
     @Override

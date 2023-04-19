@@ -1,8 +1,12 @@
 package com.achat.app.services;
 import com.achat.app.utils.Utils;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FirebaseService {
     private static FirebaseService firebaseServices;
@@ -74,5 +78,14 @@ public class FirebaseService {
     public FirebaseDatabase getFirebaseDatabase() {
         this.firebaseDatabase = FirebaseDatabase.getInstance();
         return this.firebaseDatabase;
+    }
+
+    public Task updateTrainData(HashMap keyMessageMap) {
+        return this.currentUserDatabase.child("auto_reply_data").setValue(keyMessageMap);
+    }
+
+    // gets reference of current user auto reply data
+    public DatabaseReference getAutoreplyDataRef() {
+        return this.currentUserDatabase.child("auto_reply_data");
     }
 }
