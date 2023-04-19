@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import androidx.annotation.NonNull;
 //import android.support.design.widget.TextInputEditText;
 
+import com.achat.app.services.FirebaseService;
 import com.google.android.material.textfield.TextInputEditText;
 //import android.support.v7.app.AlertDialog;
 //import android.support.v7.app.AppCompatActivity;
@@ -29,14 +30,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Arrays;
+
 public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private TextInputEditText keysInput;
     private TextInputEditText messageInput;
     private Button addData;
     private DatabaseReference mCurrentUserDatabase;
-    private FirebaseAuth mAuth;
+    private FirebaseService fbService;
     private Toolbar mToolbar;
-    private String mCurrentUsetId;
     private Spinner spinner;
     private Button mDefaultbtn;
     private TextInputEditText mDefaultMsg;
@@ -45,14 +47,17 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train_bot);
-        mAuth=FirebaseAuth.getInstance();
-        mCurrentUsetId=mAuth.getUid();
+
+        this.fbService = FirebaseService.getInstance();
+
         keysInput=(TextInputEditText)findViewById(R.id.bot_keys_input);
         messageInput=(TextInputEditText)findViewById(R.id.bot_messages_input);
         addData=(Button)findViewById(R.id.bot_add_button);
         mToolbar=(Toolbar) findViewById(R.id.main_page_toolbar);
+        // mToolbar.setTitle("aChat - Add Automatic Replies");
         setSupportActionBar(mToolbar);
-//        getSupportActionBar().setTitle("aChat - Add Automatic Replies");
+        // getSupportActionBar().setTitle("aChat - Add Automatic Replies");
+        // category dropdown
         spinner = (Spinner)findViewById(R.id.spinner);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(TrainBot.this,
@@ -63,22 +68,16 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
         spinner.setOnItemSelectedListener(this);
         mDefaultbtn=(Button) findViewById(R.id.bot_default_button);
         mDefaultMsg=(TextInputEditText) findViewById(R.id.bot_default_input);
-        mDefaultbtn.setOnClickListener(new View.OnClickListener() {
 
+        mCurrentUserDatabase = this.fbService.getCurrentUserDatabase(false);
+
+        mDefaultbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String dMessage=mDefaultMsg.getText().toString();
                 mCurrentUserDatabase.child("default_msg").setValue(dMessage);
-            }
 
-        });
-
-        mCurrentUserDatabase=FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUsetId);
-        mDefaultbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-               mDefaultMsg.setText(" ");
+                mDefaultMsg.setText(" ");
                 AlertDialog alertDialog =  new AlertDialog.Builder(TrainBot.this).create();
                 alertDialog.setTitle("aChat Automatic Replies");
                 alertDialog.setMessage("Default Message has been set");
@@ -89,9 +88,14 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
                             }
                         });
                 alertDialog.show();
-                                  }
+            }
+        });
 
-                                       });
+        String[] inputKeys=keysInput.getText().toString().split(",");
+        String responseInputMessage=messageInput.getText().toString();
+        for (String key: inputKeys) {
+
+        }
         addData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,9 +113,9 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
                         String keysInputString=keysInput.getText().toString();
                         String responseInputMessage=messageInput.getText().toString();
 
-                        Log.d("revaa keys",keysInDbArray.toString());
-                        Log.d("revaa responses",messagesInDb.toString());
-                        Log.d("revaa associations",associations.toString());
+                        Log.d("TrainBot: keys = ",keysInDbArray.toString());
+                        Log.d("TrainBot: responses = ",messagesInDb.toString());
+                        Log.d("TrainBot:associations=",associations.toString());
 
                         int messageMatchedIndex=-1;
                         String[] keysInputArray=keysInputString.split(",");
@@ -130,7 +134,7 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
                         }
                         messageMatchedIndex=responseMessagesInDbArray.length;
                         int newKeyIndex=keysInDbArray.length;
-                        Log.d("revaa bot","newKeyIndex is"+newKeyIndex);
+                        Log.d("TrainBot","newKeyIndex is"+newKeyIndex);
                         int selectedCategoryPosition=spinner.getSelectedItemPosition()+1;
                         for(int i=0;i<keysInputArray.length;i++)
                         {
@@ -140,13 +144,13 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
                                 if(keysInputArray[i].trim().equalsIgnoreCase(keysInDbArray[j]))
                                 {
                                     matchedKeyIndex=j;
-                                    Log.d("revaa bot","key found in db matched index = "+matchedKeyIndex);
+                                    Log.d("TrainBot","key found in db matched index = "+matchedKeyIndex);
                                     associations.append(";"+matchedKeyIndex+":"+messageMatchedIndex+":"+selectedCategoryPosition);
                                 }
                             }
                             if(matchedKeyIndex==-1)
                             {
-                                Log.d("revaa bot","key not found in db new index = "+newKeyIndex);
+                                Log.d("TrainBot","key not found in db new index = "+newKeyIndex);
                                 keysInDb.append(","+keysInputArray[i]);
                                 associations.append(";"+newKeyIndex+":"+messageMatchedIndex+":"+selectedCategoryPosition);
                                 ++newKeyIndex;

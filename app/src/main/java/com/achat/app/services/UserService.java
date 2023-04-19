@@ -39,7 +39,9 @@ public class UserService {
     public FirebaseUser getCurrentUser(boolean force) {
         if (!Utils.isTruthy(this.currentUser) || force) {
             this.currentUser = this.fbService.authentication.getCurrentUser();
-            this.uid = this.currentUser.getUid();
+            if (Utils.isTruthy(this.currentUser)) {
+                this.uid = this.currentUser.getUid();
+            }
         }
         return this.currentUser;
     }
