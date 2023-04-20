@@ -1,6 +1,6 @@
-import { onMessageSent } from "./MessageListener";
+import { onMessageSent, onMessageSent2 } from "./MessageListener";
 
-export { onMessageSent }
+export { onMessageSent, onMessageSent2 }
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 //
