@@ -99,4 +99,24 @@ public class FirebaseService {
     public String getDeviceToken() {
         return FirebaseInstanceId.getInstance().getToken();
     }
+
+    public DatabaseReference getCurrentUserFriendRequestsDB() {
+        return this.getFirebaseDatabase().getReference().child("Friend_req").child(this.authentication.getCurrentUser().getUid());
+    }
+
+    public DatabaseReference getAllUserFriendRequestsDB() {
+        return this.getFirebaseDatabase().getReference().child("Friend_req");
+    }
+
+    public DatabaseReference getUsersDb() {
+        return this.getFirebaseDatabase().getReference().child("Users");
+    }
+
+    public DatabaseReference getFriendsDb() {
+        return this.getFirebaseDatabase().getReference().child("Friends");
+    }
+
+    public DatabaseReference getCurrentUserFriendsDb() {
+        return this.getFriendsDb().child(this.authentication.getCurrentUser().getUid());
+    }
 }
