@@ -7,9 +7,11 @@ const achat_db = admin_db()
 
 export const onMessageSent = database.ref('MessageNotifications/{current_user_id}/{message_notification_id}').onWrite((change, context) => {
     logger.log('inside onMessageSent2 ', 'user id: ', context.params.current_user_id, ' message_notification_id: ', context.params.message_notification_id);
-    logger.log('change:  ', change);
+    logger.info('change:  ', JSON.stringify(change));
+    logger.info('context params:  ', JSON.stringify(context.params));
+
     
-    const current_user_id: string = context.params.to_user_id;
+    const current_user_id: string = context.params.current_user_id;
     const message_notification_id: string = context.params.message_notification_id;
 
     const fromUser = achat_db.ref(`/MessageNotifications/${current_user_id}/${message_notification_id}`).once('value');
@@ -41,7 +43,7 @@ export const onMessageSent = database.ref('MessageNotifications/{current_user_id
                 const autoReplyDataQuery = achat_db.ref(`Users/${current_user_id}/auto_reply_data`).once('value');
                 const onlineQuery = achat_db.ref(`Users/${current_user_id}/online`).once('value');
 
-                const lastMessageIdQuery = achat_db.ref(`Chat/${from_user_id}/${current_user_id}`).once('value')
+                const lastMessageIdQuery = achat_db.ref(`Chat/${from_user_id}/${current_user_id}/lastMessageId`).once('value')
 
                 return Promise.all([autoReplyDataQuery, onlineQuery, lastMessageIdQuery])
                     .then((result) => {
@@ -53,19 +55,29 @@ export const onMessageSent = database.ref('MessageNotifications/{current_user_id
 
                         // if offline online value would be timestamp
                         if (typeof(online) === 'number') {
-                            let category = autoReplyData[from_user_id]
+
+                            logger.log("User is offline");
+                            let category = autoReplyData[from_user_id];
+                            logger.info("User category is", category);
+
                             if (category) {
-                                
+                                logger.log("User category is valid");
                                 const lastMessageQuery = achat_db.ref(`messages/${from_user_id}/${current_user_id}/${lastMessageId}`).once('value');
+                                logger.log("retrieved last message query reference");
                                 lastMessageQuery.then(lastMessageSnapshot => {
                                     const lastMessageObj = lastMessageSnapshot.val();
+                                    logger.log("retrieved lastMessage Object");
+                                    logger.info("last message: ", lastMessageObj?.message);
                                     if (lastMessageObj?.message) {
                                         const lastMessage: string = lastMessageObj?.message;
 
                                         const fromUserMessageDbRef = achat_db.ref().child("messages/"+from_user_id+"/"+current_user_id)   
                                         const toUserMessageDbRef = achat_db.ref().child("messages/"+current_user_id+"/"+from_user_id)
 
+                                        logger.log("retrieved message buckets of both users");
+
                                         const sendResponseAutomatically = (message: string) => {
+                                            logger.log("sending message -- auto reply");
                                             const messageObject = {
                                                 message,
                                                 seen:false,
@@ -75,6 +87,7 @@ export const onMessageSent = database.ref('MessageNotifications/{current_user_id
                                             };
                                             toUserMessageDbRef.push().set(messageObject);
                                             fromUserMessageDbRef.push().set(messageObject);
+                                            logger.log("sent message -- auto reply");
                                         }
                                         const getMatchedMessages = (category: string, inputKeys: string[]): string[] => {
                                             let matchedMessages: string[] = [];
@@ -85,11 +98,23 @@ export const onMessageSent = database.ref('MessageNotifications/{current_user_id
                                         };
                                         const inputKeys: string[] = lastMessage.split(" ").filter(key => !!key).map(key => key.toLowerCase());
                                         const matchedMessages = getMatchedMessages(category, inputKeys);
+                                        let autoReplyMessage;
                                         if (!matchedMessages.length) {
-                                            sendResponseAutomatically(autoReplyData["default_message"] || "I'm offline currently.");
+                                            logger.log("No matched auto response");
+                                            autoReplyMessage = autoReplyData["default_message"] || "I'm offline currently.";
+                                            logger.info("Selecting default message: ", autoReplyMessage);
+                                        } else {
+                                            logger.log("Matched auto response");
+                                            autoReplyMessage = matchedMessages[0];
+                                            logger.info("Selecting AutoResponse message: ", autoReplyMessage);
                                         }
+                                        sendResponseAutomatically(autoReplyMessage);
+                                    } else {
+                                        logger.error("Error in retrieving last message");
                                     }
                                 });
+                            } else {
+                                logger.error("From user is not categorised");
                             }
                         } else if (online === true){
                             logger.log("User is online. autoreply not needed");
