@@ -1,6 +1,7 @@
 package com.achat.app.model;
 
 import com.achat.app.services.FirebaseService;
+import com.achat.app.utils.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -152,6 +153,18 @@ public class User implements Serializable {
     }
 
     public void addUserToList(String userId, String listName) {
+        if (!Utils.isTruthy(friends)) {
+            this.friends = new ArrayList<String>();
+        }
+        if (!Utils.isTruthy(family)) {
+            this.family = new ArrayList<String>();
+        }
+        if (!Utils.isTruthy(both)) {
+            this.both = new ArrayList<String>();
+        }
+        if (!Utils.isTruthy(none)) {
+            this.none = new ArrayList<String>();
+        }
         if (friends.contains(userId)) {
             friends.remove(userId);
         }
