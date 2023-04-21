@@ -57,10 +57,10 @@ export const onMessageSent = database.ref('MessageNotifications/{current_user_id
                         if (typeof(online) === 'number') {
 
                             logger.log("User is offline");
-                            let category = autoReplyData[from_user_id];
+                            let category = autoReplyData?.user_categories?.[from_user_id];
                             logger.info("User category is", category);
 
-                            if (category) {
+                            if (category && category != 'none') {
                                 logger.log("User category is valid");
                                 const lastMessageQuery = achat_db.ref(`messages/${from_user_id}/${current_user_id}/${lastMessageId}`).once('value');
                                 logger.log("retrieved last message query reference");
@@ -92,7 +92,7 @@ export const onMessageSent = database.ref('MessageNotifications/{current_user_id
                                         const getMatchedMessages = (category: string, inputKeys: string[]): string[] => {
                                             let matchedMessages: string[] = [];
                                             [category, 'both'].forEach(cat => {
-                                                matchedMessages = [...matchedMessages, ...inputKeys.filter(key => !!autoReplyData[cat][key]).map(key => autoReplyData[cat][key])];
+                                                matchedMessages = [...matchedMessages, ...inputKeys.filter(key => !!(autoReplyData[cat] && autoReplyData[cat][key])).map(key => autoReplyData[cat][key])];
                                             });
                                             return matchedMessages;
                                         };
@@ -113,6 +113,8 @@ export const onMessageSent = database.ref('MessageNotifications/{current_user_id
                                         logger.error("Error in retrieving last message");
                                     }
                                 });
+                            } else if (category == 'none') {
+                                logger.log("Autoreply disabled for this user");
                             } else {
                                 logger.error("From user is not categorised");
                             }
