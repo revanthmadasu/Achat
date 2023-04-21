@@ -8,13 +8,13 @@ public class Requests {
     public Requests()
     {
         request_type="default";
-        Log.d("revaa requests","requests instantiated with default values");
+        Log.d("Requests","requests instantiated with default values");
     }
 
     public Requests(String request_type)
     {
         this.request_type=request_type;
-        Log.d("revaa requests","requests instantiated with request type "+request_type);
+        Log.d("Requests","requests instantiated with request type "+request_type);
     }
 
     public String getRequest_type() {

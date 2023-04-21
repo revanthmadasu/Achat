@@ -2,13 +2,9 @@ package com.revanth.apps.achat;
 
 
 import android.os.Bundle;
-//import android.support.annotation.NonNull;
 import androidx.annotation.NonNull;
-//import android.support.v4.app.Fragment;
 import androidx.fragment.app.Fragment;
-//import android.support.v7.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-//import android.support.v7.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.achat.app.services.FirebaseService;
+import com.achat.app.services.UserService;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,7 +22,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
@@ -42,6 +39,8 @@ public class RequestsFragment extends Fragment {
     private FirebaseAuth mAuth;
     String mCurrentUserId;
 
+    private FirebaseService fbService;
+    private UserService userService;
 
     private DatabaseReference mFriendDatabase;
     private Button acceptBtn;
@@ -50,7 +49,8 @@ public class RequestsFragment extends Fragment {
     FirebaseRecyclerAdapter<Requests,RequestViewHolder> mReqsRecyclerViewAdapter;
 
     public RequestsFragment() {
-        // Required empty public constructor
+        this.fbService = FirebaseService.getInstance();
+        this.userService = UserService.getInstance();
     }
 
     @Override
@@ -66,12 +66,15 @@ public class RequestsFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         mCurrentUserId = mAuth.getCurrentUser().getUid();
 
-        mFriendRequestsDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_req").child(mCurrentUserId);
+        mFriendRequestsDatabase = this.fbService.getCurrentUserFriendRequestsDB();
 
-        mAllFriendRequestsDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_req");
 
-        mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-        mFriendDatabase = FirebaseDatabase.getInstance().getReference().child("Friends");
+        mAllFriendRequestsDatabase = this.fbService.getAllUserFriendRequestsDB();
+
+
+        mUsersDatabase = this.fbService.getUsersDb();
+
+        mFriendDatabase = this.fbService.getFriendsDb();
 
         myRequestsList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -88,7 +91,7 @@ public class RequestsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("revaa requestsfragment", "In Start");
+        Log.d("RequestsFragment", "In Start");
         options = new FirebaseRecyclerOptions.Builder<Requests>().setQuery(mFriendRequestsDatabase, Requests.class).build();
 
         mReqsRecyclerViewAdapter= new FirebaseRecyclerAdapter<Requests, RequestViewHolder>(options)
@@ -98,7 +101,7 @@ public class RequestsFragment extends Fragment {
             @Override
             public RequestViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
                 View view=LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.friend_request_all_users_layout,viewGroup,false);
-                Log.d("Rocky","In Create");
+                Log.d("RequestsFragment","In Create");
                 return new RequestViewHolder(view);
             }
 
@@ -115,13 +118,14 @@ public class RequestsFragment extends Fragment {
                         String thumb_image=dataSnapshot.child("thumb_image").getValue().toString();
                         String status=dataSnapshot.child("status").getValue().toString();
 
-                        Log.d("revaa requestsfragment","request type: "+requestType);
+                        Log.d("RequestsFragment","request type: "+requestType);
 
                         holder.setThumb_user_image(thumb_image,getContext());
                         holder.setUser_Status(status);
                         holder.setUserName(userName);
 
                         if(!requestType.equals("sent")) {
+                            // accept friend request
                             holder.mView.findViewById(R.id.request_accept_btn).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
