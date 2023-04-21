@@ -47,7 +47,8 @@ export const onMessageSent = database.ref('MessageNotifications/{to_user_id}/{me
                     .then((result) => {
                         const [autoReplyData, online, lastMessageId] = result.map(snapshot => snapshot.val());
                         logger.log("Autoreplydata retrieval successful");
-                        if (!online) {
+                        // if offline online value would be timestamp
+                        if (online === true) {
                             let category = autoReplyData[from_user_id]
                             if (category) {
                                 
