@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import androidx.annotation.NonNull;
 
 import com.achat.app.services.FirebaseService;
+import com.achat.app.utils.Utils;
 import com.google.android.material.textfield.TextInputEditText;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -68,8 +69,7 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
             @Override
             public void onClick(View v) {
                 String dMessage=mDefaultMsg.getText().toString();
-                mCurrentUserDatabase.child("default_msg").setValue(dMessage);
-
+                fbService.getDefaultMessageRef().setValue(dMessage);
                 mDefaultMsg.setText(" ");
                 AlertDialog alertDialog =  new AlertDialog.Builder(TrainBot.this).create();
                 alertDialog.setTitle("aChat Automatic Replies");
@@ -90,13 +90,6 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
                 mCurrentUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        StringBuilder keysInDb=new StringBuilder(dataSnapshot.child("keys").getValue().toString());
-                        StringBuilder messagesInDb=new StringBuilder(dataSnapshot.child("responses").getValue().toString());
-                        StringBuilder associations=new StringBuilder(dataSnapshot.child("associations").getValue().toString());
-
-                        String[] keysInDbArray=keysInDb.toString().split(",");
-                        String[] responseMessagesInDbArray=messagesInDb.toString().split(";;;");
-
                         // binding input values
                         String keysInputString=keysInput.getText().toString();
                         String responseInputMessage=messageInput.getText().toString();
@@ -104,15 +97,24 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
                         fbService.getAutoreplyDataRef().addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                HashMap<String, HashMap<String, String>> keyMessagesMap = (HashMap<String, HashMap<String, String>>) dataSnapshot.getValue();
+                                HashMap<String, HashMap<String, String>> autoReplyMap = (HashMap<String, HashMap<String, String>>) dataSnapshot.getValue();
+                                if (!Utils.isTruthy(autoReplyMap)) {
+                                    autoReplyMap = new HashMap<String, HashMap<String, String>>();
+                                }
+
+                                HashMap<String, String> keyMessagesMap = autoReplyMap.get(selectedCategory);
+                                if (!Utils.isTruthy(keyMessagesMap)) {
+                                    keyMessagesMap = new HashMap<String, String>();
+                                }
+
                                 String[] allKeys = keysInputString.split(",");
-                                keyMessagesMap.put(selectedCategory, new HashMap<String, String>());
                                 for (String key: allKeys) {
                                     String trimmed_key = key.trim().toLowerCase();
-                                    keyMessagesMap.get(selectedCategory).put(trimmed_key, responseInputMessage);
+                                    keyMessagesMap.put(trimmed_key, responseInputMessage);
                                 }
+                                autoReplyMap.put(selectedCategory, keyMessagesMap);
                                 // ToDo - add onComplete Listener
-                                fbService.updateTrainData(keyMessagesMap);
+                                fbService.updateTrainData(autoReplyMap);
                             }
 
                             @Override
@@ -125,52 +127,6 @@ public class TrainBot extends AppCompatActivity implements AdapterView.OnItemSel
 
                         fbService.updateTrainData(keyMessagesMap);
 
-                        Log.d("TrainBot: keys = ",keysInDbArray.toString());
-                        Log.d("TrainBot: responses = ",messagesInDb.toString());
-                        Log.d("TrainBot:associations=",associations.toString());
-
-                        int messageMatchedIndex=-1;
-                        String[] keysInputArray=keysInputString.split(",");
-                        for(int i=0;i<responseMessagesInDbArray.length;++i)
-                        {
-                            if(responseInputMessage.equalsIgnoreCase(responseMessagesInDbArray[i]))
-                            {
-                                messageMatchedIndex=i;
-                                break;
-                            }
-                        }
-                        if(messageMatchedIndex==-1)
-                        {
-                            messagesInDb.append(";;;");
-                            messagesInDb.append(responseInputMessage);
-                        }
-                        messageMatchedIndex=responseMessagesInDbArray.length;
-                        int newKeyIndex=keysInDbArray.length;
-                        Log.d("TrainBot","newKeyIndex is"+newKeyIndex);
-                        int selectedCategoryPosition=spinner.getSelectedItemPosition()+1;
-                        for(int i=0;i<keysInputArray.length;i++)
-                        {
-                            int matchedKeyIndex=-1;
-                            for(int j=0;j<keysInDbArray.length;++j)
-                            {
-                                if(keysInputArray[i].trim().equalsIgnoreCase(keysInDbArray[j]))
-                                {
-                                    matchedKeyIndex=j;
-                                    Log.d("TrainBot","key found in db matched index = "+matchedKeyIndex);
-                                    associations.append(";"+matchedKeyIndex+":"+messageMatchedIndex+":"+selectedCategoryPosition);
-                                }
-                            }
-                            if(matchedKeyIndex==-1)
-                            {
-                                Log.d("TrainBot","key not found in db new index = "+newKeyIndex);
-                                keysInDb.append(","+keysInputArray[i]);
-                                associations.append(";"+newKeyIndex+":"+messageMatchedIndex+":"+selectedCategoryPosition);
-                                ++newKeyIndex;
-                            }
-                        }
-                        mCurrentUserDatabase.child("keys").setValue(keysInDb.toString());
-                        mCurrentUserDatabase.child("responses").setValue(messagesInDb.toString());
-                        mCurrentUserDatabase.child("associations").setValue(associations.toString());
                         messageInput.setText(" ");
                         keysInput.setText(" ");
                         AlertDialog alertDialog = new AlertDialog.Builder(TrainBot.this).create();

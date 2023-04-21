@@ -3,10 +3,13 @@ package com.revanth.apps.achat;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-//import android.support.annotation.NonNull;
 import androidx.annotation.NonNull;
+
+import com.achat.app.model.User;
+import com.achat.app.services.FirebaseService;
+import com.achat.app.services.UserService;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.material.textfield.TextInputLayout;
-//import android.support.v7.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -35,11 +38,14 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private ProgressDialog mRegProgress;
-
+    private FirebaseService firebaseService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.firebaseService = FirebaseService.getInstance();
+
         setContentView(R.layout.activity_register);
         Toolbar myToolBar = (Toolbar) findViewById(R.id.main_app_bar);
         setSupportActionBar(myToolBar);
@@ -55,12 +61,10 @@ public class RegisterActivity extends AppCompatActivity {
         nCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 String display_name= nDisplayName.getEditText().getText().toString();
                 String Email= nEmail.getEditText().getText().toString().trim();
                 String Password= nPassword.getEditText().getText().toString().trim();
                 register_user(display_name,Email,Password);
-
             }
         });
     }
@@ -70,33 +74,13 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-
                 if(task.isSuccessful()){
+                    mDatabase = firebaseService.getCurrentUserDatabase(true);
+                    User user = new User(display_name);
 
-
-                    FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
-                    String uid = current_user.getUid();
-
-                    mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
-
-                    String device_token = FirebaseInstanceId.getInstance().getToken();
-
-                    HashMap<String, String> userMap = new HashMap<>();
-                    userMap.put("name", display_name);
-                    userMap.put("status", " Status default.");
-                    userMap.put("image", "default");
-                    userMap.put("thumb_image", "default");
-                    userMap.put("device_token", device_token);
-                    userMap.put("keys","name");
-                    userMap.put("responses","You can call me"+display_name);
-                    userMap.put("associations","0:0:2");
-                    userMap.put("friends_cat"," ");
-                    userMap.put("family_cat"," ");
-
-                    mDatabase.setValue(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    mDatabase.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-
                             if(task.isSuccessful()){
                                 Toast.makeText(RegisterActivity.this,"Successfully created account",Toast.LENGTH_SHORT).show();
                                 mRegProgress.dismiss();
@@ -105,20 +89,19 @@ public class RegisterActivity extends AppCompatActivity {
                                 mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(mainIntent);
                                 finish();
-
                             }
-
+                        }
+                    }).addOnCanceledListener(new OnCanceledListener() {
+                        @Override
+                        public void onCanceled() {
+                            Log.e("RegisterActivity", "Unable to create user in firebase");
+                            Toast.makeText(RegisterActivity.this, "Cannot create user.", Toast.LENGTH_SHORT).show();
                         }
                     });
-
-
                 } else {
-
                     mRegProgress.hide();
                     Toast.makeText(RegisterActivity.this, "Cannot Sign in. Please check the form and try again.", Toast.LENGTH_LONG).show();
-
                 }
-
             }
         });
     }

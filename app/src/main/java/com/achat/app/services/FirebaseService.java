@@ -4,6 +4,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,8 +85,18 @@ public class FirebaseService {
         return this.currentUserDatabase.child("auto_reply_data").setValue(keyMessageMap);
     }
 
-    // gets reference of current user auto reply data
+    // gets reference of current user auto reply collection
     public DatabaseReference getAutoreplyDataRef() {
         return this.currentUserDatabase.child("auto_reply_data");
+    }
+
+    // gets default message reference from autoreply collection
+    public DatabaseReference getDefaultMessageRef() {
+        return this.getAutoreplyDataRef().child("default_message");
+    }
+
+    // ToDo replace getToken with getInstanceId
+    public String getDeviceToken() {
+        return FirebaseInstanceId.getInstance().getToken();
     }
 }
