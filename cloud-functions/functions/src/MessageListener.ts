@@ -89,15 +89,15 @@ export const onMessageSent = database.ref('MessageNotifications/{current_user_id
                                             fromUserMessageDbRef.push().set(messageObject);
                                             logger.log("sent message -- auto reply");
                                         }
-                                        const getMatchedMessages = (category: string, inputKeys: string[]): string[] => {
+                                        const getMatchedMessages = (category: string[], inputKeys: string[]): string[] => {
                                             let matchedMessages: string[] = [];
-                                            [category, 'both'].forEach(cat => {
+                                            [...category, 'both'].forEach(cat => {
                                                 matchedMessages = [...matchedMessages, ...inputKeys.filter(key => !!(autoReplyData[cat] && autoReplyData[cat][key])).map(key => autoReplyData[cat][key])];
                                             });
                                             return matchedMessages;
                                         };
                                         const inputKeys: string[] = lastMessage.split(" ").filter(key => !!key).map(key => key.toLowerCase());
-                                        const matchedMessages = getMatchedMessages(category, inputKeys);
+                                        const matchedMessages = getMatchedMessages(category != 'both' ? [category] : ['friend', 'family'], inputKeys);
                                         let autoReplyMessage;
                                         if (!matchedMessages.length) {
                                             logger.log("No matched auto response");
