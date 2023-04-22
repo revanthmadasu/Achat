@@ -14,10 +14,6 @@ public class User implements Serializable {
     private String image;
     private String thumb_image;
     private String device_token;
-    private List<String> friends;
-    private List<String> family;
-    private List<String> none;
-    private List<String> both;
     private HashMap<String, HashMap<String, String>> auto_reply_data;
     private Object online; // variable to store online status or timestamp
 
@@ -31,26 +27,17 @@ public class User implements Serializable {
         this.image = "default";
         this.thumb_image = "default";
         this.device_token = FirebaseService.getInstance().getDeviceToken();
-        this.friends = new ArrayList<String>();
-        this.family = new ArrayList<String>();
-        this.none = new ArrayList<String>();
-        this.both = new ArrayList<String>();
         this.auto_reply_data = new HashMap<String, HashMap<String, String>>();
         this.online = true;
     }
 
     public User(String name, String status, String image, String thumb_image, String device_token,
-                List<String> friends, List<String> family, List<String> none, List<String> both, HashMap<String, HashMap<String, String>> auto_reply_data,
-                Object online) {
+                HashMap<String, HashMap<String, String>> auto_reply_data,Object online) {
         this.name = name;
         this.status = status;
         this.image = image;
         this.thumb_image = thumb_image;
         this.device_token = device_token;
-        this.friends = friends;
-        this.family = family;
-        this.none = new ArrayList<String>();
-        this.both = new ArrayList<String>();
         this.auto_reply_data = auto_reply_data;
         this.online = online;
     }
@@ -96,38 +83,6 @@ public class User implements Serializable {
         this.device_token = device_token;
     }
 
-    public List<String> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(List<String> friends) {
-        this.friends = friends;
-    }
-
-    public List<String> getFamily() {
-        return family;
-    }
-
-    public void setFamily(List<String> family) {
-        this.family = family;
-    }
-
-    public List<String> getNone() {
-        return none;
-    }
-
-    public void setNone(List<String> none) {
-        this.none = none;
-    }
-
-    public List<String> getBoth() {
-        return both;
-    }
-
-    public void setBoth(List<String> both) {
-        this.both = both;
-    }
-
     public HashMap<String, HashMap<String, String>> getAuto_reply_data() {
         return auto_reply_data;
     }
@@ -153,46 +108,13 @@ public class User implements Serializable {
     }
 
     public void addUserToList(String userId, String listName) {
-        if (!Utils.isTruthy(friends)) {
-            this.friends = new ArrayList<String>();
+        if (!Utils.isTruthy(this.auto_reply_data)) {
+            this.auto_reply_data = new HashMap<>();
         }
-        if (!Utils.isTruthy(family)) {
-            this.family = new ArrayList<String>();
+        if (!Utils.isTruthy(this.auto_reply_data.get("user_categories"))) {
+            this.auto_reply_data.put("user_categories", new HashMap<>());
         }
-        if (!Utils.isTruthy(both)) {
-            this.both = new ArrayList<String>();
-        }
-        if (!Utils.isTruthy(none)) {
-            this.none = new ArrayList<String>();
-        }
-        if (friends.contains(userId)) {
-            friends.remove(userId);
-        }
-        if (family.contains(userId)) {
-            family.remove(userId);
-        }
-        if (both.contains(userId)) {
-            both.remove(userId);
-        }
-        if (none.contains(userId)) {
-            none.remove(userId);
-        }
-        switch (listName) {
-            case "friends":
-                friends.add(userId);
-                break;
-            case "family":
-                family.add(userId);
-                break;
-            case "both":
-                both.add(userId);
-                break;
-            case "none":
-                none.add(userId);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid list name: " + listName);
-        }
+        this.auto_reply_data.get("user_categories").put(userId, listName);
     }
 }
 

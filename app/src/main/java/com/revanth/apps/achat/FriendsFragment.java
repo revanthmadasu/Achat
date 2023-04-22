@@ -155,11 +155,7 @@ public class FriendsFragment extends Fragment {
                                                  user.addUserToList(list_user_id, "none");
                                                  break;
                                          }
-
-                                         fbService.getCurrentUserDatabase(false).child("friends").setValue(user.getFriends());
-                                         fbService.getCurrentUserDatabase(false).child("family").setValue(user.getFamily());
-                                         fbService.getCurrentUserDatabase(false).child("both").setValue(user.getBoth());
-                                         fbService.getCurrentUserDatabase(false).child("none").setValue(user.getNone());
+                                         fbService.updateTrainData(user.getAuto_reply_data());
                                      }
 
                                      @Override
