@@ -39,5 +39,14 @@ export class CloudTasksService {
       
         logger.log(`Created task ${response.name}`);
         return response;
-      }
+    }
+
+    public async deleteTask(taskName: string) {
+        logger.log(`Attempting to delete queue task ${taskName}`);
+        const res = await this.cloudTasksClient.deleteTask({
+            name: this.cloudTasksClient.taskPath(CONSTANTS.PROJECT_ID, CONSTANTS.PROJECT_LOCATION, CONSTANTS.MESSAGES_QUEUE, taskName)
+        });
+        logger.log(`deleted queue task ${taskName}`);
+        return res;
+    }
 }
