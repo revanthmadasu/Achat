@@ -1,5 +1,5 @@
 // https://firebase.google.com/docs/functions/typescript
 import { onMessageSent } from "./MessageListener";
-import { autoreplySubscription } from "./AutoReplySubscription";
+import { autoReplyApi } from "./AutoReplyHttps";
 
-export { onMessageSent, autoreplySubscription }
+export { onMessageSent, autoReplyApi }

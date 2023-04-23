@@ -3,9 +3,11 @@ import { database as admin_db, messaging } from "firebase-admin";
 import { AchatFirebaseApp } from "./App";
 // import { DataSnapshot } from "firebase-functions/v1/database";
 import { PubSubService } from "./PubSub";
+import { CloudTasksService } from "./CloudTasks";
 
 AchatFirebaseApp.getApp();
-const pubSubService = PubSubService.getPubSubService();
+// const pubSubService = PubSubService.getPubSubService();
+const cloudTasksService = CloudTasksService.getCloudTasksService();
 const achat_db = admin_db()
 
 export const onMessageSent = database.ref('MessageNotifications/{current_user_id}/{message_notification_id}').onWrite((change, context) => {
@@ -41,11 +43,12 @@ export const onMessageSent = database.ref('MessageNotifications/{current_user_id
                     from_user_id : from_user_id
                 }
             };
-
-            pubSubService.publishMessage({
+            const messageDetails = {
                 current_user_id,
                 from_user_id,
-            }).then((messageId: string) => logger.log(messageId));
+            };
+            cloudTasksService.addTaskToQueue(messageDetails).then(response => logger.info(`task registered response: ${JSON.stringify(response)}`));
+            // pubSubService.publishMessage(messageDetails).then((messageId: string) => logger.log(messageId));
             return messaging().sendToDevice(token_id,payload);
         });
     });

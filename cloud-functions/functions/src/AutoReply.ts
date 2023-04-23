@@ -13,6 +13,10 @@ export const autoReply = (data: any) => {
     return Promise.all([autoReplyDataQuery, onlineQuery, lastMessageIdQuery])
         .then((result) => {
             const [autoReplyData, online, lastMessageId] = result.map(snapshot => snapshot.val());
+            const response = {
+                status: 0,
+                message: ""
+            };
             logger.log("Autoreplydata retrieval successful");
             logger.info("autoreply data", autoReplyData);
             logger.info("online", online);
@@ -76,20 +80,32 @@ export const autoReply = (data: any) => {
                             sendResponseAutomatically(autoReplyMessage);
                         } else {
                             logger.error("Error in retrieving last message");
+                            response.status = 500;
+                            response.message = "Error in retrieving last message";
                         }
                     });
                 } else if (category == 'none') {
                     logger.log("Autoreply disabled for this user");
+                    response.status = 200;
+                    response.message = "Autoreply disabled for this user";
                 } else {
                     logger.error("From user is not categorised");
+                    response.status = 500;
+                    response.message = "From user is not categorised";
                 }
             } else if (online === true){
                 logger.log("User is online. autoreply not needed");
+                response.status = 200;
+                response.message = "User is online. autoreply not needed";
             } else {
                 logger.error("Invalid online value: ", online);
+                response.status = 500;
+                response.message = `Invalid online value: ${online}`;
             }
+            return response;
         })
         .catch((e) => {
             logger.error('error: ',e)
+            return e;
         });
 }
