@@ -3,6 +3,7 @@ package com.revanth.apps.achat;
  * author : revanth madasu
  */
 
+import com.achat.app.utils.Utils;
 import android.content.Intent;
 import android.os.Bundle;
 //import android.support.annotation.NonNull;
@@ -104,8 +105,11 @@ public class ChatsFragment extends Fragment {
                 lastMessageQuery.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        String message=dataSnapshot.child("message").getValue().toString();
-                        holder.setMessage(message,model.isSeen());
+                        Object messageObj = dataSnapshot.child("message").getValue();
+                        if (Utils.isTruthy(messageObj)) {
+                            String message=dataSnapshot.child("message").getValue().toString();
+                            holder.setMessage(message,model.isSeen());
+                        }
                     }
 
                     @Override
