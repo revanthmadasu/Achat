@@ -47,8 +47,9 @@ export const autoReply = (data: any) => {
 
                             const sendResponseAutomatically = (message: string) => {
                                 logger.log("sending message -- auto reply");
+                                let autoReplyTaggedMessage = message + " - autoreply";
                                 const messageObject = {
-                                    message,
+                                    message: autoReplyTaggedMessage,
                                     seen:false,
                                     type:"text",
                                     time: admin_db.ServerValue.TIMESTAMP,
@@ -78,6 +79,8 @@ export const autoReply = (data: any) => {
                                 logger.info("Selecting AutoResponse message: ", autoReplyMessage);
                             }
                             sendResponseAutomatically(autoReplyMessage);
+                            response.status = 200;
+                            response.message = "Sent auto reply";
                         } else {
                             logger.error("Error in retrieving last message");
                             response.status = 500;
