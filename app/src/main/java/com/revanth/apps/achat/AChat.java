@@ -58,6 +58,7 @@ public class AChat extends Application implements Application.ActivityLifecycleC
     @Override
     public void onActivityStopped(Activity activity) {
         Log.d("Achat Main","application stopped");
+        this.userService.goOffline();
     }
 
     @Override
@@ -68,5 +69,6 @@ public class AChat extends Application implements Application.ActivityLifecycleC
     @Override
     public void onActivityDestroyed(Activity activity) {
         Log.d("Achat Main","application destroyed");
+        this.userService.goOffline();
     }
 }

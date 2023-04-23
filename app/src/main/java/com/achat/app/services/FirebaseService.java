@@ -1,8 +1,13 @@
 package com.achat.app.services;
 import com.achat.app.utils.Utils;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FirebaseService {
     private static FirebaseService firebaseServices;
@@ -74,5 +79,44 @@ public class FirebaseService {
     public FirebaseDatabase getFirebaseDatabase() {
         this.firebaseDatabase = FirebaseDatabase.getInstance();
         return this.firebaseDatabase;
+    }
+
+    public Task updateTrainData(HashMap keyMessageMap) {
+        return this.currentUserDatabase.child("auto_reply_data").setValue(keyMessageMap);
+    }
+
+    // gets reference of current user auto reply collection
+    public DatabaseReference getAutoreplyDataRef() {
+        return this.currentUserDatabase.child("auto_reply_data");
+    }
+
+    // gets default message reference from autoreply collection
+    public DatabaseReference getDefaultMessageRef() {
+        return this.getAutoreplyDataRef().child("default_message");
+    }
+
+    // ToDo replace getToken with getInstanceId
+    public String getDeviceToken() {
+        return FirebaseInstanceId.getInstance().getToken();
+    }
+
+    public DatabaseReference getCurrentUserFriendRequestsDB() {
+        return this.getFirebaseDatabase().getReference().child("Friend_req").child(this.authentication.getCurrentUser().getUid());
+    }
+
+    public DatabaseReference getAllUserFriendRequestsDB() {
+        return this.getFirebaseDatabase().getReference().child("Friend_req");
+    }
+
+    public DatabaseReference getUsersDb() {
+        return this.getFirebaseDatabase().getReference().child("Users");
+    }
+
+    public DatabaseReference getFriendsDb() {
+        return this.getFirebaseDatabase().getReference().child("Friends");
+    }
+
+    public DatabaseReference getCurrentUserFriendsDb() {
+        return this.getFriendsDb().child(this.authentication.getCurrentUser().getUid());
     }
 }

@@ -1,4 +1,4 @@
-package com.revanth.apps.achat;
+package com.achat.app.model;
 
 public class DictObjectModel {
     String word, meaning;

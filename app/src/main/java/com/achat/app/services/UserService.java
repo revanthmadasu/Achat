@@ -4,6 +4,8 @@ import com.achat.app.utils.Utils;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ServerValue;
 
+import java.util.HashMap;
+
 public class UserService {
     public static UserService userService;
     public FirebaseService fbService;
@@ -39,9 +41,18 @@ public class UserService {
     public FirebaseUser getCurrentUser(boolean force) {
         if (!Utils.isTruthy(this.currentUser) || force) {
             this.currentUser = this.fbService.authentication.getCurrentUser();
-            this.uid = this.currentUser.getUid();
+            if (Utils.isTruthy(this.currentUser)) {
+                this.uid = this.currentUser.getUid();
+            }
         }
         return this.currentUser;
+    }
+
+    public String getCurrentUserUid(boolean force) {
+        if (!Utils.isTruthy(this.uid) || force) {
+            this.uid = this.getCurrentUser(force).getUid();
+        }
+        return this.uid;
     }
 
     public boolean isUserLoggedIn() {
