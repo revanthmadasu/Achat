@@ -1,8 +1,7 @@
 import { logger, database} from "firebase-functions";
 import { database as admin_db, messaging } from "firebase-admin";
 import { AchatFirebaseApp } from "./App";
-// import { DataSnapshot } from "firebase-functions/v1/database";
-import { PubSubService } from "./PubSub";
+// import { PubSubService } from "./PubSub";
 import { CloudTasksService } from "./CloudTasks";
 
 AchatFirebaseApp.getApp();
