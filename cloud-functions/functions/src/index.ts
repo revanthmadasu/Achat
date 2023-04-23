@@ -1,10 +1,5 @@
+// https://firebase.google.com/docs/functions/typescript
 import { onMessageSent } from "./MessageListener";
+import { autoreplySubscription } from "./AutoReplySubscription";
 
-export { onMessageSent }
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+export { onMessageSent, autoreplySubscription }
