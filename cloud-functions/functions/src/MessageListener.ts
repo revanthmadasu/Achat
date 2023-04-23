@@ -1,11 +1,9 @@
 import { logger, database} from "firebase-functions";
 import { database as admin_db, messaging } from "firebase-admin";
 import { AchatFirebaseApp } from "./App";
-// import { PubSubService } from "./PubSub";
 import { CloudTasksService } from "./CloudTasks";
 
 AchatFirebaseApp.getApp();
-// const pubSubService = PubSubService.getPubSubService();
 const cloudTasksService = CloudTasksService.getCloudTasksService();
 const achat_db = admin_db()
 
@@ -47,7 +45,6 @@ export const onMessageSent = database.ref('MessageNotifications/{current_user_id
                 from_user_id,
             };
             cloudTasksService.addTaskToQueue(messageDetails).then(response => logger.info(`task registered response: ${JSON.stringify(response)}`));
-            // pubSubService.publishMessage(messageDetails).then((messageId: string) => logger.log(messageId));
             return messaging().sendToDevice(token_id,payload);
         });
     });
