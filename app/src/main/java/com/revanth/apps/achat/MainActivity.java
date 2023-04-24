@@ -2,14 +2,9 @@ package com.revanth.apps.achat;
 
 import android.content.Intent;
 import android.os.Bundle;
-//import android.support.design.widget.TabLayout;
 import com.google.android.material.tabs.TabLayout;
-//import android.support.v4.view.ViewPager;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-//import android.support.v7.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatActivity;
-//import android.support.v7.widget.Toolbar;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -29,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager mViewPager;
     private SectionsPagerAdapter mSectionsPagerAdapter;
-//    private PagerAdapter mSectionsPagerAdapter;
     private TabLayout mTabLayout;
 
     private Toolbar nToolbar;
@@ -49,28 +43,22 @@ public class MainActivity extends AppCompatActivity {
 
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-       mTabLayout = (TabLayout) findViewById(R.id.main_tabs);
+        mTabLayout = (TabLayout) findViewById(R.id.main_tabs);
         mTabLayout.setupWithViewPager(mViewPager);
         nToolbar=(Toolbar) findViewById(R.id.main_page_toolbar);
         setSupportActionBar(nToolbar);
         getSupportActionBar().setTitle("aChat");
-
-
-
-
     }
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.d("revaa","application started");
-        if(currentUser==null)
-        {
+        Log.d("MainActivity","application started");
+        if(currentUser==null) {
            sendToStart();
         }
-        else
-        {
+        else {
             mUserRef.child("online").setValue(true);
         }
     }
@@ -78,14 +66,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop()
     {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.d("revaa","application stopped");
+        Log.d("MainActivity","application stopped");
          super.onStop();
-        //if(currentUser!=null) {
-          //  mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
-            //mUserRef.child("lastSeen")
-
-       // }
     }
 
     private void sendToStart() {
@@ -104,27 +86,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        if(item.getItemId()==R.id.main_logout_btn)
-        {
+        if(item.getItemId()==R.id.main_logout_btn) {
             mUserRef.child("online").setValue(ServerValue.TIMESTAMP);
             FirebaseAuth.getInstance().signOut();
             sendToStart();
-
         }
-        if(item.getItemId() == R.id.main_settings_btn){
-
-
+        if(item.getItemId() == R.id.main_settings_btn) {
             Intent settingsIntent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(settingsIntent);
-
         }
-        if(item.getItemId()==R.id.main_all_btn)
-        {
+        if(item.getItemId()==R.id.main_all_btn) {
             Intent settingsIntent=new Intent(MainActivity.this,UsersActivity.class);
             startActivity(settingsIntent);
         }
-        if(item.getItemId()==R.id.main_train_bot_btn)
-        {
+        if(item.getItemId()==R.id.main_train_bot_btn) {
             Intent trainBotIntent=new Intent(MainActivity.this,TrainBot.class);
             startActivity(trainBotIntent);
         }

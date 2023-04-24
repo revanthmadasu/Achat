@@ -23,6 +23,8 @@ import java.util.Map;
 //import static android.support.v7.widget.RecyclerView.*;
 import androidx.recyclerview.widget.RecyclerView.*;
 
+import com.achat.app.model.DictObjectModel;
+
 public class DictMainActivity extends AppCompatActivity {
 
     private static Adapter adapter;

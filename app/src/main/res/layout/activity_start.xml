@@ -25,11 +25,11 @@
 
     <Button
         android:id="@+id/start_reg_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="213dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="138dp"
+        android:layout_marginBottom="137dp"
         android:background="@color/design_default_color_primary"
         android:text="Create Account?" />
 
