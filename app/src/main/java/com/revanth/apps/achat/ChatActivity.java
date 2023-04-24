@@ -65,7 +65,6 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private RecyclerView mMessagesList;
-    private SwipeRefreshLayout mRefreshLayout;
 
     private final List<Messages> messagesList = new ArrayList<>();
     private LinearLayoutManager mLinearLayout;
@@ -221,7 +220,6 @@ public class ChatActivity extends AppCompatActivity {
                 mAdapter.notifyDataSetChanged();
 
                 mMessagesList.scrollToPosition(messagesList.size() - 1);
-                //   mRefreshLayout.setRefreshing(false);
             }
 
             @Override
@@ -244,8 +242,6 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     private void sendMessage() {
@@ -314,46 +310,25 @@ public class ChatActivity extends AppCompatActivity {
                     startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
                 }
             });
-          /* mDictionary.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Log.d("dict","Temp1");
-                    Intent Dict = new Intent(ChatActivity.this.getApplicationContext(), DictMainActivity.class);
-                    startActivity(Dict);
-                }
-            });*/
-         /*  public void whatever(View v){
-                    Log.d("dict","Temp1");
-                    Intent Dict = new Intent(ChatActivity.this, DictMainActivity.class);
-                    startActivity(Dict);
-                }*/
-
-
-
         }
     }
 
-    public void whatever(View view) {
-        Log.d("dict", "Temp1");
-        //Intent Dict = new Intent(ChatActivity.this, DictMainActivity.class);
-        try {
-            startActivity(new Intent(ChatActivity.this, DictMainActivity.class));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.chat_menu,menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         if(item.getItemId()==R.id.delete_chat_btn) {
             // to do delete
+            Log.d("ChatActivity", "Delete Chat clicked");
+            this.fbService.deleteChat(this.mChatUser);
+            this.messagesList.clear();
+            this.mLinearLayout.requestLayout();
         }
         if(item.getItemId() == R.id.sch_chat_btn){
             Intent scheduleIntent=new Intent(ChatActivity.this,SetScheduleMsg.class);

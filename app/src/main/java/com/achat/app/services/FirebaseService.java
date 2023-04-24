@@ -18,6 +18,8 @@ public class FirebaseService {
     public DatabaseReference currentUserDatabase;
     public DatabaseReference messageNotificationsDB;
 
+    public String uid = "";
+
     private FirebaseService() {
         this.getAuthentication();
         this.getFirebaseDatabase();
@@ -26,8 +28,16 @@ public class FirebaseService {
     public static FirebaseService getInstance() {
         if (!Utils.isTruthy(FirebaseService.firebaseServices)) {
             FirebaseService.firebaseServices = new FirebaseService();
+            FirebaseService.firebaseServices.getUid(true);
         }
         return FirebaseService.firebaseServices;
+    }
+
+    public String getUid(boolean force) {
+        if (force || !Utils.isTruthy(this.uid)) {
+            this.uid = this.authentication.getCurrentUser().getUid();
+        }
+        return this.uid;
     }
 
     public FirebaseAuth getAuthentication(boolean force) {
@@ -41,7 +51,7 @@ public class FirebaseService {
         if (!Utils.isTruthy(this.currentUserDatabase) || force) {
             this.currentUserDatabase = this.getFirebaseDatabase().getReference()
                     .child("Users")
-                    .child(this.authentication.getCurrentUser().getUid());
+                    .child(this.getUid(true));
         }
         return this.currentUserDatabase;
     }
@@ -101,7 +111,7 @@ public class FirebaseService {
     }
 
     public DatabaseReference getCurrentUserFriendRequestsDB() {
-        return this.getFirebaseDatabase().getReference().child("Friend_req").child(this.authentication.getCurrentUser().getUid());
+        return this.getFirebaseDatabase().getReference().child("Friend_req").child(this.getUid(false));
     }
 
     public DatabaseReference getAllUserFriendRequestsDB() {
@@ -117,6 +127,11 @@ public class FirebaseService {
     }
 
     public DatabaseReference getCurrentUserFriendsDb() {
-        return this.getFriendsDb().child(this.authentication.getCurrentUser().getUid());
+        return this.getFriendsDb().child(this.getUid(false));
+    }
+
+    public void deleteChat(String userId) {
+        DatabaseReference chatRef = this.getMessagesDbRef(this.getUid(false), userId);
+        chatRef.setValue(null);
     }
 }
