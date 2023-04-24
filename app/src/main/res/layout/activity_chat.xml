@@ -42,16 +42,6 @@
         android:orientation="horizontal"
         android:weightSum="10">
 
-        <ImageButton
-            android:id="@+id/chat_add_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:alpha="0.5"
-            android:background="@android:color/white"
-            android:padding="10dp"
-            app:srcCompat="@drawable/ic_add_black_24dp" />
-
         <EditText
             android:id="@+id/chat_message_view"
             android:layout_width="wrap_content"
@@ -69,7 +59,7 @@
         <ImageButton
             android:id="@+id/chat_send_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:alpha="0.5"
             android:background="@android:color/white"
@@ -80,7 +70,7 @@
             android:id="@+id/dict_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="whatever"
+            android:onClick="onClickDictionary"
             android:layout_weight="1"
 
             android:text="Dictionary" />
