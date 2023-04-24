@@ -59,7 +59,6 @@ public class LoginActivity extends AppCompatActivity {
 
          mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
         setSupportActionBar(mToolbar);
-      //  getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("LOGIN");
 

@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 
 import com.achat.app.model.User;
 import com.achat.app.services.FirebaseService;
-import com.achat.app.services.UserService;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.material.textfield.TextInputLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,19 +15,13 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
-
-import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout nDisplayName;
@@ -47,12 +40,12 @@ public class RegisterActivity extends AppCompatActivity {
         this.firebaseService = FirebaseService.getInstance();
 
         setContentView(R.layout.activity_register);
-        Toolbar myToolBar = (Toolbar) findViewById(R.id.main_app_bar);
+        Toolbar myToolBar = (Toolbar) findViewById(R.id.main_page_toolbar);
         setSupportActionBar(myToolBar);
         mAuth = FirebaseAuth.getInstance();
         mRegProgress = new ProgressDialog(this);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setTitle("Create an Account");
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Create an Account");
         nDisplayName= (TextInputLayout) findViewById(R.id.textInputLayout4);
         nEmail= (TextInputLayout) findViewById(R.id.textInputLayout6);
         nPassword= (TextInputLayout) findViewById(R.id.textInputLayout7);
