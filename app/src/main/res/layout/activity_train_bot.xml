@@ -130,7 +130,7 @@
                 android:layout_width="365dp"
                 android:layout_height="wrap_content"
                 android:hint="Add response message"
-                android:textColor="@color/common_google_signin_btn_text_dark_default" />
+                android:textColor="@color/colorPrimaryDark" />
 
 
         </com.google.android.material.textfield.TextInputLayout>
