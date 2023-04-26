@@ -14,7 +14,7 @@ public class User implements Serializable {
     private String image;
     private String thumb_image;
     private String device_token;
-    private HashMap<String, HashMap<String, String>> auto_reply_data;
+    private HashMap<String, Object> auto_reply_data;
     private Object online; // variable to store online status or timestamp
 
     public User() {
@@ -27,12 +27,12 @@ public class User implements Serializable {
         this.image = "default";
         this.thumb_image = "default";
         this.device_token = FirebaseService.getInstance().getDeviceToken();
-        this.auto_reply_data = new HashMap<String, HashMap<String, String>>();
+        this.auto_reply_data = new HashMap<String, Object>();
         this.online = true;
     }
 
     public User(String name, String status, String image, String thumb_image, String device_token,
-                HashMap<String, HashMap<String, String>> auto_reply_data,Object online) {
+                HashMap<String, Object> auto_reply_data,Object online) {
         this.name = name;
         this.status = status;
         this.image = image;
@@ -83,11 +83,11 @@ public class User implements Serializable {
         this.device_token = device_token;
     }
 
-    public HashMap<String, HashMap<String, String>> getAuto_reply_data() {
+    public HashMap<String, Object> getAuto_reply_data() {
         return auto_reply_data;
     }
 
-    public void setAuto_reply_data(HashMap<String, HashMap<String, String>> auto_reply_data) {
+    public void setAuto_reply_data(HashMap<String, Object> auto_reply_data) {
         this.auto_reply_data = auto_reply_data;
     }
 
@@ -114,7 +114,8 @@ public class User implements Serializable {
         if (!Utils.isTruthy(this.auto_reply_data.get("user_categories"))) {
             this.auto_reply_data.put("user_categories", new HashMap<>());
         }
-        this.auto_reply_data.get("user_categories").put(userId, listName);
+        HashMap user_cats = (HashMap<String, String>)this.auto_reply_data.get("user_categories");
+        user_cats.put(userId, listName);
     }
 }
 

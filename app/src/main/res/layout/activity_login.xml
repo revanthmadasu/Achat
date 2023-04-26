@@ -92,7 +92,8 @@
             android:hint="Password"
             android:textColor="@android:color/black"
             android:textColorHighlight="@android:color/black"
-            android:textColorHint="@android:color/black" />
+            android:textColorHint="@android:color/black"
+            android:password="true" />
 <!--    </android.support.design.widget.TextInputLayout>-->
     </com.google.android.material.textfield.TextInputLayout>
 

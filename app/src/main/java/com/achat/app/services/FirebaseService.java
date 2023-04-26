@@ -2,6 +2,7 @@ package com.achat.app.services;
 import com.achat.app.utils.Utils;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -35,7 +36,14 @@ public class FirebaseService {
 
     public String getUid(boolean force) {
         if (force || !Utils.isTruthy(this.uid)) {
-            this.uid = this.authentication.getCurrentUser().getUid();
+            this.getAuthentication(force);
+            if (!force && !Utils.isTruthy(this.authentication)) {
+                this.getAuthentication(true);
+            }
+            FirebaseUser user = this.authentication.getCurrentUser();
+            if (Utils.isTruthy(user)) {
+                this.uid = this.authentication.getCurrentUser().getUid();
+            }
         }
         return this.uid;
     }
