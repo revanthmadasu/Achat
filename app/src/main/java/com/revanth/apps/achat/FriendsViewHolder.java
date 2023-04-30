@@ -16,15 +16,15 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class FriendsViewHolder extends RecyclerView.ViewHolder {
+public class FriendsViewHolder extends ViewHolder {
 
 
-    View mView;
+//    View mView;
 
     public FriendsViewHolder(@NonNull View itemView) {
         super(itemView);
 
-        mView=itemView;
+//        mView=itemView;
     }
     public void setDate(String date)
     {
