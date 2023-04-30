@@ -2,7 +2,6 @@ package com.revanth.apps.achat;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
-//import android.support.v7.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder>{
 
-    //public FirebaseAuth mAuth;
     private List<Messages> mMessageList;
     private DatabaseReference mUserDatabase;
 
