@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 //import android.support.v7.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +36,8 @@ import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private Toolbar mToolbar;
+
     private TextView mProfileName,mProfileStatus,mProfileFriendsCount;
     private ImageView mProfileImage;
     private Button mProfileSendReqBtn,mDeclineButton;
@@ -48,7 +52,9 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+        this.mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("aChat - User Profile");
         Log.d("notification intent"," starting ");
 
         final String user_id=getIntent().getStringExtra("user_id");
