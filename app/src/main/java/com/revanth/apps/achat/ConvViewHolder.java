@@ -14,12 +14,12 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ConvViewHolder extends RecyclerView.ViewHolder {
-    View mView;
+public class ConvViewHolder extends ViewHolder {
+//    View mView;
 
     public ConvViewHolder(@NonNull View itemView) {
         super(itemView);
-        mView=itemView;
+//        mView=itemView;
     }
 
     public void setMessage(String message, boolean isSeen){
