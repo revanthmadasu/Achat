@@ -2,17 +2,11 @@ package com.revanth.apps.achat;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-//import android.support.v7.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatActivity;
-//import android.support.v7.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-//import android.support.v7.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-//import android.support.v7.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView;
-//import android.support.v7.widget.SearchView;
 import androidx.appcompat.widget.SearchView;
-//import android.support.v7.widget.Toolbar;
 import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
@@ -20,7 +14,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-//import static android.support.v7.widget.RecyclerView.*;
 import androidx.recyclerview.widget.RecyclerView.*;
 
 import com.achat.app.model.DictObjectModel;
@@ -65,44 +58,30 @@ public class DictMainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
-
                 newText = newText.toLowerCase();
-
                 final ArrayList<DictObjectModel> filteredList = new ArrayList<DictObjectModel>();
-
                 for (int i = 0; i < wordcombimelist.size(); i++) {
-
                     final String text = wordcombimelist.get(i).toLowerCase();
                     if (text.contains(newText)) {
-
                         filteredList.add(new DictObjectModel(wordcombimelist.get(i),meancombimelist.get(i)));
                     }
                 }
                 adapter = new CustomAdapter(filteredList);
                 recyclerView.setAdapter(adapter);
-
-
                 return true;
             }
         });
-
-
     }
     public void fetchData()
     {
         db =new DatabaseHelper(this);
         try {
-
             db.createDataBase();
             db.openDataBase();
-
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
-
 
         namelist=new LinkedHashMap<>();
         int ii;
@@ -127,5 +106,4 @@ public class DictMainActivity extends AppCompatActivity {
         adapter = new CustomAdapter(data);
         recyclerView.setAdapter(adapter);
     }
-
 }

@@ -1,43 +1,26 @@
 package com.revanth.apps.achat;
 
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.achat.app.model.User;
 import com.achat.app.services.FirebaseService;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
-
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -69,12 +52,9 @@ public class FriendsFragment extends Fragment {
         this.fbService = FirebaseService.getInstance();
         mCurrent_user_id=mAuth.getCurrentUser().getUid();
 
-//        mFriendsDatabase=FirebaseDatabase.getInstance().getReference()
-//                .child("Friends").child(mCurrent_user_id);
         this.mFriendsDatabase = this.fbService.getCurrentUserFriendsDb();
         this.mFriendsDatabase.keepSynced(true);
 
-//        mUsersDatabase=FirebaseDatabase.getInstance().getReference().child("Users");
         this.mUsersDatabase = this.fbService.getUsersDb();
         this.mUsersDatabase.keepSynced(true);
 
@@ -111,76 +91,16 @@ public class FriendsFragment extends Fragment {
 
                     }
                 });
+               Common.showChatOptions(holder, list_user_id, FriendsFragment.this);
 
-
-             holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
-                 @Override
-                 public boolean onLongClick(View v) {
-
-                     CharSequence options[] = new CharSequence[]{"Open Profile","auto-reply: Friend","auto-reply: Family","auto-reply: Both","auto-reply: None"};
-
-                     final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
-                     builder.setTitle("Select Options");
-                     builder.setItems(options, new DialogInterface.OnClickListener() {
-                         @Override
-                         public void onClick(DialogInterface dialogInterface, final int i) {
-
-                             //Click Event for each item.
-                             if(i==0)
-                             {
-                                 Intent profileIntent = new Intent(getContext(), ProfileActivity.class);
-                                 profileIntent.putExtra("user_id", list_user_id);
-                                 startActivity(profileIntent);
-                                 Log.d("FriendsFragment","case 0");
-                             }
-                             else {
-                                 mUsersDatabase.child(mCurrent_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
-                                     @Override
-                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                         List<String> friends, family, both, none;
-                                         User user = dataSnapshot.getValue(User.class);
-
-                                         switch (i) {
-                                             case 1:
-                                                 user.addUserToList(list_user_id, "friends");
-                                                 break;
-                                             case 2:
-                                                 user.addUserToList(list_user_id, "family");
-                                                 break;
-                                             case 3:
-                                                 user.addUserToList(list_user_id, "both");
-                                                 break;
-                                             case 4:
-                                                 user.addUserToList(list_user_id, "none");
-                                                 break;
-                                         }
-                                         fbService.updateTrainData(user.getAuto_reply_data());
-                                     }
-
-                                     @Override
-                                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                     }
-                                 });
-                             }
-                         }
-                     });
-                     builder.show();
-                     return true;
-                 }
-
-             });
-
-             holder.mView.setOnClickListener(new View.OnClickListener() {
-                 @Override
-                 public void onClick(View v) {
-                     Intent chatIntent = new Intent(getContext(), ChatActivity.class);
-                     chatIntent.putExtra("user_id", list_user_id);
-                     //chatIntent.putExtra("user_name", username);
-                     startActivity(chatIntent);
-                 }
-             });
+               holder.mView.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View v) {
+                       Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                       chatIntent.putExtra("user_id", list_user_id);
+                       startActivity(chatIntent);
+                   }
+               });
             }
 
             @NonNull
